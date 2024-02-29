@@ -2,8 +2,8 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lease/models/car.dart';
+import 'package:lease/screens/welcome_screen.dart';
 import 'package:lease/shared/colors.dart';
-import 'package:lease/widgets/Car_type_list.dart';
 import 'package:lease/widgets/app_nav_bar.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -16,7 +16,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       bottomNavigationBar: const AppNavBar(),
       appBar: AppBar(
-        toolbarHeight: 128,
+        toolbarHeight: 80,
         flexibleSpace: Container(
           decoration: BoxDecoration(color: appWhite, boxShadow: [
             BoxShadow(
@@ -28,23 +28,8 @@ class HomeScreen extends StatelessWidget {
           ]),
           child: Stack(
             children: [
-              const Positioned(
-                bottom: 0.0,
-                left: 0.0,
-                right: 0.0,
-                child: CarTypeList(),
-              ),
               Positioned(
-                top: 40.0,
-                right: 8.0,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.tune),
-                ),
-              ),
-              Positioned(
-                left: 16.0,
-                right: 72.0,
+                right: 50.0,
                 top: 35.0,
                 child: GestureDetector(
                   onTap: () {
@@ -54,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                     tag: 'search',
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
+                        horizontal: 36.0,
                         vertical: 8.0,
                       ),
                       decoration: BoxDecoration(
@@ -101,16 +86,17 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-        child: ListView.builder(
-          itemCount: Car.sampleData.length,
-          itemBuilder: (context, index) {
-            final property = Car.sampleData[index];
-            return PropertyCard(property: property);
-          },
-        ),
-      ),
+      // body: Padding(
+      //   padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+      //   child: ListView.builder(
+      //     itemCount: Car.sampleData.length,
+      //     itemBuilder: (context, index) {
+      //       final property = Car.sampleData[index];
+      //       return PropertyCard(property: property);
+      //     },
+      //   ),
+      // ),
+      body: const WelcomeScreen(),
     );
   }
 }

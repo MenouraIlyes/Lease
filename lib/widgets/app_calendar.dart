@@ -85,28 +85,6 @@ class _CalendarOptionsSegmentedButtonState
         ),
       ),
       child: SizedBox(),
-      // child: SegmentedButton<CalendarOptions>(
-      //   segments: const <ButtonSegment<CalendarOptions>>[
-      //     ButtonSegment<CalendarOptions>(
-      //       value: CalendarOptions.day,
-      //       label: Text('Dates'),
-      //     ),
-      //     ButtonSegment<CalendarOptions>(
-      //       value: CalendarOptions.month,
-      //       label: Text('Month'),
-      //     ),
-      //     ButtonSegment<CalendarOptions>(
-      //       value: CalendarOptions.year,
-      //       label: Text('Flexible'),
-      //     ),
-      //   ],
-      //   selected: <CalendarOptions>{selected},
-      //   onSelectionChanged: (newValue) {
-      //     setState(() {
-      //       selected = newValue.first;
-      //     });
-      //   },
-      // ),
     );
   }
 }

@@ -60,8 +60,8 @@ class AppNavBar extends StatelessWidget {
               ),
             ),
             NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              label: 'Log in',
+              icon: Icon(Icons.more_horiz_outlined),
+              label: 'More',
               selectedIcon: Icon(
                 Icons.person,
                 color: appBlue,
