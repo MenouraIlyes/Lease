@@ -5,14 +5,14 @@ import 'package:lease/intro_screens/intro_page_3.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
+class WelcomeWidget extends StatefulWidget {
+  const WelcomeWidget({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  State<WelcomeWidget> createState() => _WelcomeWidgetState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeWidgetState extends State<WelcomeWidget> {
   //Controller to keep track of which page we're on
   PageController _controller = PageController();
   @override
@@ -33,12 +33,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
         //Dot indicators
         Container(
-            alignment: Alignment(0.9, -0.7),
-            child: SmoothPageIndicator(
-              controller: _controller,
-              count: 3,
-              axisDirection: Axis.vertical,
-            ))
+          alignment: Alignment(0.9, -0.7),
+          child: SmoothPageIndicator(
+            controller: _controller,
+            count: 3,
+            axisDirection: Axis.vertical,
+            effect: ExpandingDotsEffect(
+              activeDotColor: appBlue,
+              dotHeight: 10,
+              dotWidth: 10,
+            ),
+          ),
+        ),
       ],
     ));
   }

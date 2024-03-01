@@ -2,7 +2,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lease/models/car.dart';
-import 'package:lease/screens/welcome_screen.dart';
+import 'package:lease/widgets/welcome_widget.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:lease/widgets/app_nav_bar.dart';
 
@@ -86,17 +86,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      // body: Padding(
-      //   padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-      //   child: ListView.builder(
-      //     itemCount: Car.sampleData.length,
-      //     itemBuilder: (context, index) {
-      //       final property = Car.sampleData[index];
-      //       return PropertyCard(property: property);
-      //     },
-      //   ),
-      // ),
-      body: const WelcomeScreen(),
+      body: const WelcomeWidget(),
     );
   }
 }
