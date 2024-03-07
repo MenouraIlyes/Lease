@@ -1,34 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/shared/colors.dart';
-import 'package:lease/shared/error_dialogue.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  late final TextEditingController _email;
-  late final TextEditingController _password;
-
-  @override
-  void initState() {
-    _email = TextEditingController();
-    _password = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
-  }
-
+class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,9 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: _email,
-                        enableSuggestions: false,
-                        autocorrect: false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
@@ -102,9 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: _password,
-                        enableSuggestions: false,
-                        autocorrect: false,
                         obscureText: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -114,53 +89,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
-                //forgot password
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forgot password?',
-                        style: GoogleFonts.poppins(color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
-                ),
                 SizedBox(height: 20),
+
                 //sign it button
                 Container(
                   child: MaterialButton(
                     minWidth: 330,
                     height: 50,
-                    onPressed: () async {
-                      final email = _email.text;
-                      final password = _password.text;
-                      try {
-                        final userCredential = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                          (Route<dynamic> route) => false,
-                        );
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          await showErrorDialog(context, 'User not found');
-                        } else if (e.code == 'wrong-password') {
-                          await showErrorDialog(context, 'Wrong password');
-                        } else {
-                          await showErrorDialog(context, 'Error: ${e.code}');
-                        }
-                      } catch (e) {
-                        await showErrorDialog(context, e.toString());
-                      }
-                    },
+                    onPressed: () {},
                     color: appBlue,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
@@ -176,7 +112,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(
+                  height: 20,
+                ),
                 //register button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -187,11 +125,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      " Register now",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        color: appBlue,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        " Register now",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          color: appBlue,
+                        ),
                       ),
                     ),
                   ],

@@ -1,20 +1,67 @@
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lease/models/car.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:lease/widgets/car_trips.dart';
+import 'package:lease/widgets/liked_cars.dart';
+import 'package:lease/widgets/more_info.dart';
 import 'package:lease/widgets/welcome_widget.dart';
 import 'package:lease/shared/colors.dart';
-import 'package:lease/widgets/app_nav_bar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  void _navigateBottomBar(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  final List<Widget> pages = [
+    WelcomeWidget(),
+    LikesCars(),
+    CarTrips(),
+    MoreWidget(),
+  ];
   @override
   Widget build(BuildContext context) {
     // final size = MediaQuery.sizeOf(context);
     final textTheme = Theme.of(context).textTheme;
     return Scaffold(
-      bottomNavigationBar: const AppNavBar(),
+      bottomNavigationBar: GNav(
+        gap: 8,
+        backgroundColor: appWhite,
+        color: appBlack,
+        activeColor: appBlue,
+        onTabChange: (index) {
+          _navigateBottomBar(index);
+        },
+        tabs: [
+          GButton(
+            icon: Icons.search_outlined,
+            text: 'Search',
+          ),
+          GButton(
+            icon: Icons.favorite_border_outlined,
+            text: 'Likes',
+          ),
+          GButton(
+            icon: FontAwesomeIcons.road,
+            text: 'Trips',
+          ),
+          GButton(
+            icon: Icons.more_horiz_outlined,
+            text: 'More',
+          ),
+        ],
+      ),
       appBar: AppBar(
         toolbarHeight: 80,
         flexibleSpace: Container(
@@ -86,110 +133,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: const WelcomeWidget(),
-    );
-  }
-}
-
-class PropertyCard extends StatefulWidget {
-  final Car property;
-
-  const PropertyCard({Key? key, required this.property}) : super(key: key);
-
-  @override
-  State<PropertyCard> createState() => _PropertyCardState();
-}
-
-class _PropertyCardState extends State<PropertyCard> {
-  final controller = PageController();
-  var currentPage = 0;
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
-          children: [
-            Container(
-              clipBehavior: Clip.antiAlias,
-              width: size.width,
-              height: size.width - 32.0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              child: PageView(
-                controller: controller,
-                onPageChanged: (value) {
-                  setState(() {
-                    currentPage = value;
-                  });
-                },
-                children: widget.property.photoUrls.map((imageUrl) {
-                  return Image.network(imageUrl, fit: BoxFit.cover);
-                }).toList(),
-              ),
-            ),
-            Positioned(
-              bottom: 8.0,
-              left: 0.0,
-              right: 0.0,
-              child: DotsIndicator(
-                dotsCount: widget.property.photoUrls.length,
-                position: currentPage,
-                onTap: (index) {
-                  controller.animateToPage(
-                    index,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeIn,
-                  );
-                },
-                decorator: DotsDecorator(
-                  color: colorScheme.onSecondary,
-                  activeColor: colorScheme.secondary,
-                  size: const Size.square(8.0),
-                  activeSize: const Size(12.0, 8.0),
-                  activeShape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${widget.property.name}, ${widget.property.city}',
-                style: textTheme.bodyLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                widget.property.size,
-              ),
-              const SizedBox(height: 8.0),
-              Text(
-                widget.property.transmission,
-              ),
-            ],
-          ),
-        ),
-      ],
+      body: pages[_selectedIndex],
     );
   }
 }

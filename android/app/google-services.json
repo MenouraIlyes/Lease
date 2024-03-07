@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "600120463845",
+    "project_id": "lease-c970e",
+    "storage_bucket": "lease-c970e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600120463845:android:7c4e8daf15168937b81f0c",
+        "android_client_info": {
+          "package_name": "com.example.lease"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAM-GSXwBrAIGCArHf3wMQBArEUmURnhi8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/screens/login_screen.dart';
+import 'package:lease/screens/register_screen.dart';
 import 'package:lease/shared/colors.dart';
 
 class FirstScreen extends StatelessWidget {
@@ -76,7 +77,14 @@ class FirstScreen extends StatelessWidget {
                     child: MaterialButton(
                       minWidth: double.infinity,
                       height: 60,
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterScreen(),
+                          ),
+                        );
+                      },
                       color: appBlue,
                       elevation: 0,
                       shape: RoundedRectangleBorder(
