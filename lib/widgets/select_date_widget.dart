@@ -27,83 +27,53 @@ class SelectDateWidget extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
           child: step == BookingStep.selectDate
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'When\'s your trip ?',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16.0),
-                    Row(
-                      children: [
-                        Expanded(child: CalendarOptionsSegmentedButton()),
-                      ],
-                    ),
-                    AppCalendar(),
-                    // const Spacer(),
-                    const Divider(),
-                    // SizedBox(
-                    //   height: 48,
-                    //   child: ListView(
-                    //     scrollDirection: Axis.horizontal,
-                    //     children: [
-                    //       OutlinedButton(
-                    //         onPressed: () {},
-                    //         child: const Text(
-                    //           'Exact dates',
-                    //           style: TextStyle(color: appBlue),
-                    //         ),
-                    //       ),
-                    //       const SizedBox(width: 8.0),
-                    //       OutlinedButton(
-                    //         onPressed: () {},
-                    //         child: const Text(
-                    //           '+ 1 day',
-                    //           style: TextStyle(color: appBlue),
-                    //         ),
-                    //       ),
-                    //       OutlinedButton(
-                    //         onPressed: () {},
-                    //         child: const Text(
-                    //           '+ 2 day',
-                    //           style: TextStyle(color: appBlue),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // // ),
-                    // const Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Skip',
-                            style: TextStyle(color: appBlue),
-                          ),
-                        ),
-                        FilledButton(
-                          onPressed: () {},
-                          style: FilledButton.styleFrom(
-                            backgroundColor: appBlue,
-                            minimumSize: const Size(120, 48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
+              ? SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'When\'s your trip ?',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 16.0),
+                      Row(
+                        children: [
+                          Expanded(child: CalendarOptionsSegmentedButton()),
+                        ],
+                      ),
+                      AppCalendar(),
+                      const Divider(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () {},
+                            child: const Text(
+                              'Skip',
+                              style: TextStyle(color: appBlue),
                             ),
                           ),
-                          child: const Text('Next'),
-                        )
-                      ],
-                    ),
-                  ],
+                          FilledButton(
+                            onPressed: () {},
+                            style: FilledButton.styleFrom(
+                              backgroundColor: appBlue,
+                              minimumSize: const Size(120, 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            child: const Text('Next'),
+                          )
+                        ],
+                      ),
+                    ],
+                  )
+                      .animate(delay: const Duration(milliseconds: 300))
+                      .fadeIn(duration: const Duration(milliseconds: 300)),
                 )
-                  .animate(delay: const Duration(milliseconds: 300))
-                  .fadeIn(duration: const Duration(milliseconds: 300))
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

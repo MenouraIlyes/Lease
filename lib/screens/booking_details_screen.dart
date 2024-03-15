@@ -35,27 +35,6 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
               },
               icon: const Icon(FontAwesomeIcons.xmark),
             ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Stays',
-                    style: textTheme.titleMedium!.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Experiences',
-                    style: textTheme.titleMedium,
-                  ),
-                )
-              ],
-            ),
             actions: const [SizedBox(width: 48.0)],
           ),
           body: Padding(

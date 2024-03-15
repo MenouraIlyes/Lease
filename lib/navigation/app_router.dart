@@ -5,6 +5,7 @@ import 'package:lease/screens/home_screen.dart';
 import 'package:lease/screens/first_screen.dart';
 import 'package:lease/screens/login_screen.dart';
 import 'package:lease/screens/register_screen.dart';
+import 'package:lease/screens/vehicles_list_screen.dart';
 import 'package:lease/shared/colors.dart';
 
 class AppRouter {
@@ -14,7 +15,7 @@ class AppRouter {
         name: 'home',
         path: '/',
         builder: (BuildContext context, GoRouterState state) {
-          return const HomeScreen();
+          return const VehicleListScreen();
         },
       ),
       GoRoute(

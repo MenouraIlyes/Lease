@@ -57,82 +57,84 @@ class _HomeScreenState extends State<HomeScreen> {
             text: 'Trips',
           ),
           GButton(
-            icon: Icons.more_horiz_outlined,
-            text: 'More',
+            icon: Icons.person,
+            text: 'Profile',
           ),
         ],
       ),
-      appBar: AppBar(
-        toolbarHeight: 80,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(color: appWhite, boxShadow: [
-            BoxShadow(
-              color: appBlack.withOpacity(0.1),
-              blurRadius: 1.0,
-              spreadRadius: 1.0,
-              offset: const Offset(0.0, 1.0),
-            )
-          ]),
-          child: Stack(
-            children: [
-              Positioned(
-                right: 50.0,
-                top: 35.0,
-                child: GestureDetector(
-                  onTap: () {
-                    context.pushNamed('booking-details');
-                  },
-                  child: Hero(
-                    tag: 'search',
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 36.0,
-                        vertical: 8.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: appWhite,
-                        border: Border.all(
-                          color: appGrey,
-                          width: 1.0,
+      appBar: _selectedIndex == 0
+          ? AppBar(
+              toolbarHeight: 80,
+              flexibleSpace: Container(
+                decoration: BoxDecoration(color: appWhite, boxShadow: [
+                  BoxShadow(
+                    color: appBlack.withOpacity(0.1),
+                    blurRadius: 1.0,
+                    spreadRadius: 1.0,
+                    offset: const Offset(0.0, 1.0),
+                  )
+                ]),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      right: 50.0,
+                      top: 35.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.pushNamed('booking-details');
+                        },
+                        child: Hero(
+                          tag: 'search',
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 36.0,
+                              vertical: 8.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: appWhite,
+                              border: Border.all(
+                                color: appGrey,
+                                width: 1.0,
+                              ),
+                              borderRadius: BorderRadius.circular(32.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: appGrey.withOpacity(0.5),
+                                  blurRadius: 8.0,
+                                  spreadRadius: 8.0,
+                                  offset: const Offset(0.0, 4.0),
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.search),
+                                const SizedBox(width: 8.0),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Where to?',
+                                      style: textTheme.bodyMedium!.copyWith(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      'City, airport, addresse or hotel',
+                                      style: textTheme.bodyMedium,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(32.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: appGrey.withOpacity(0.5),
-                            blurRadius: 8.0,
-                            spreadRadius: 8.0,
-                            offset: const Offset(0.0, 4.0),
-                          ),
-                        ],
                       ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.search),
-                          const SizedBox(width: 8.0),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Where to?',
-                                style: textTheme.bodyMedium!
-                                    .copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                'City, airport, addresse or hotel',
-                                style: textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ),
+            )
+          : null,
       body: pages[_selectedIndex],
     );
   }
