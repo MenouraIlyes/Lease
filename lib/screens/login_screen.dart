@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lease/Api_endpoint/services.dart';
+import 'package:lease/screens/home_screen.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:lease/shared/error_dialogue.dart';
 
@@ -27,6 +29,38 @@ class _LoginScreenState extends State<LoginScreen> {
     _email.dispose();
     _password.dispose();
     super.dispose();
+  }
+
+  Future<void> _login() async {
+    try {
+      final Map<String, dynamic> responseData = await ApiService.login(
+        _email.text,
+        _password.text,
+      );
+      final String token = responseData['token'];
+      // Store token or navigate to next screen upon successful login
+      // Replace 'NextScreen()' with your desired screen navigation code
+      // Also, you may want to store the token securely
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    } catch (error) {
+      // Handle login errors
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Invalid username or password.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   @override
@@ -134,32 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: MaterialButton(
                     minWidth: 330,
                     height: 50,
-                    onPressed: () async {
-                      final email = _email.text;
-                      final password = _password.text;
-                      try {
-                        final userCredential = await FirebaseAuth.instance
-                            .signInWithEmailAndPassword(
-                          email: email,
-                          password: password,
-                        );
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                          (Route<dynamic> route) => false,
-                        );
-                      } on FirebaseAuthException catch (e) {
-                        if (e.code == 'user-not-found') {
-                          await showErrorDialog(context, 'User not found');
-                        } else if (e.code == 'wrong-password') {
-                          await showErrorDialog(context, 'Wrong password');
-                        } else {
-                          await showErrorDialog(context, 'Error: ${e.code}');
-                        }
-                      } catch (e) {
-                        await showErrorDialog(context, e.toString());
-                      }
+                    onPressed: () {
+                      _login();
                     },
                     color: appBlue,
                     elevation: 0,

@@ -4,8 +4,8 @@ import 'package:lease/screens/login_screen.dart';
 import 'package:lease/screens/register_screen.dart';
 import 'package:lease/shared/colors.dart';
 
-class FirstScreen extends StatelessWidget {
-  const FirstScreen({super.key});
+class LoginOrRegisterScreen extends StatelessWidget {
+  const LoginOrRegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
