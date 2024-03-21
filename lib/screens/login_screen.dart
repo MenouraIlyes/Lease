@@ -1,10 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/Api_endpoint/services.dart';
-import 'package:lease/screens/home_screen.dart';
+import 'package:lease/screens/register_screen.dart';
 import 'package:lease/shared/colors.dart';
-import 'package:lease/shared/error_dialogue.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,19 +13,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late final TextEditingController _email;
+  late final TextEditingController _username;
   late final TextEditingController _password;
-
+  bool isLoggedIn = false;
   @override
   void initState() {
-    _email = TextEditingController();
+    _username = TextEditingController();
     _password = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _email.dispose();
+    _username.dispose();
     _password.dispose();
     super.dispose();
   }
@@ -34,15 +33,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     try {
       final Map<String, dynamic> responseData = await ApiService.login(
-        _email.text,
+        _username.text,
         _password.text,
       );
       final String token = responseData['token'];
-      // Store token or navigate to next screen upon successful login
-      // Replace 'NextScreen()' with your desired screen navigation code
-      // Also, you may want to store the token securely
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      isLoggedIn = true;
+      context.go('/home-logged-in');
     } catch (error) {
       // Handle login errors
       showDialog(
@@ -112,12 +108,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: _email,
+                        controller: _username,
                         enableSuggestions: false,
                         autocorrect: false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Email',
+                          hintText: 'Username',
                         ),
                       ),
                     ),
@@ -197,11 +193,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
-                      " Register now",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                        color: appBlue,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterScreen()));
+                      },
+                      child: Text(
+                        " Register now",
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.bold,
+                          color: appBlue,
+                        ),
                       ),
                     ),
                   ],

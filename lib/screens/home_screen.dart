@@ -3,9 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:lease/widgets/car_trips.dart';
+import 'package:lease/widgets/front_home_page.dart';
 import 'package:lease/widgets/liked_cars.dart';
 import 'package:lease/widgets/more_info.dart';
-import 'package:lease/widgets/welcome_widget.dart';
 import 'package:lease/shared/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   final List<Widget> pages = [
-    WelcomeWidget(),
+    FrontHomeScreen(),
     LikesCars(),
     CarTrips(),
     MoreWidget(),

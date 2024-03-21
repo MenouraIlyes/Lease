@@ -85,6 +85,12 @@ flutter:
     - assets/lease.png
     - assets/login.jpg
     - assets/transmission.png
+    - assets/welcome.jpg
+    - assets/afford.png
+    - assets/convenience.png
+    - assets/reliable.png
+    - assets/satisfied.png
+    - assets/footer.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

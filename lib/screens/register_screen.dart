@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lease/Api_endpoint/services.dart';
+import 'package:lease/screens/home_screen.dart';
 import 'package:lease/shared/colors.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -10,6 +13,47 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  late final TextEditingController _username;
+  late final TextEditingController _password;
+  late final TextEditingController _email;
+  late final TextEditingController _phoneNumber;
+  String role = "customer";
+
+  @override
+  void initState() {
+    _username = TextEditingController();
+    _password = TextEditingController();
+    _email = TextEditingController();
+    _phoneNumber = TextEditingController();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _username.dispose();
+    _password.dispose();
+    _email.dispose();
+    _phoneNumber.dispose();
+    super.dispose();
+  }
+
+  Future<void> _registerUser() async {
+    String username = _username.text;
+    String password = _password.text;
+    String email = _email.text;
+    String phoneNumber = _phoneNumber.text;
+
+    try {
+      await ApiService.registerUser(
+          username, password, email, phoneNumber, role);
+      context.go('//home-registered');
+    } catch (error) {
+      // Handle error (e.g., display error message)
+      print('Error registering user: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +75,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 //text
                 Text(
-                  "Welcome back !",
+                  "welcome to lease",
                   style: GoogleFonts.poppins(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
@@ -39,14 +83,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Login to your account",
+                  "Fill your informations below !",
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                   ),
                 ),
-                SizedBox(
-                  height: 50,
+                SizedBox(height: 50),
+
+                //username textfield
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: appWhite),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: _username,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Username',
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
+                SizedBox(height: 20),
                 //email textfield
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -59,6 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
+                        controller: _email,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Email',
@@ -80,6 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
+                        controller: _password,
                         obscureText: true,
                         decoration: InputDecoration(
                           border: InputBorder.none,
@@ -89,21 +156,87 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20),
 
+                //phone-number textfield
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: appWhite),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 20.0),
+                      child: TextField(
+                        controller: _phoneNumber,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Phone Number',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Select Role:',
+                        style: GoogleFonts.poppins(fontSize: 16),
+                      ),
+                      Row(
+                        children: [
+                          Radio<String>(
+                            activeColor: appBlue,
+                            value: 'customer',
+                            groupValue: role,
+                            onChanged: (value) {
+                              setState(() {
+                                role = value!;
+                              });
+                            },
+                          ),
+                          Text(
+                            'Customer',
+                            style: GoogleFonts.poppins(),
+                          ),
+                          Radio<String>(
+                            activeColor: appBlue,
+                            value: 'agency',
+                            groupValue: role,
+                            onChanged: (value) {
+                              setState(() {
+                                role = value!;
+                              });
+                            },
+                          ),
+                          Text('Agency', style: GoogleFonts.poppins()),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
                 //sign it button
                 Container(
                   child: MaterialButton(
                     minWidth: 330,
                     height: 50,
-                    onPressed: () {},
+                    onPressed: () {
+                      _registerUser();
+                    },
                     color: appBlue,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                         side: BorderSide(color: appWhite),
                         borderRadius: BorderRadius.circular(12)),
                     child: Text(
-                      "Login",
+                      "Join us",
                       style: GoogleFonts.poppins(
                         fontWeight: FontWeight.w400,
                         fontSize: 20,
@@ -112,38 +245,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                //register button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Not a member? ",
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        " Register now",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
-                          color: appBlue,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                SizedBox(height: 20),
               ],
             ),
           ),

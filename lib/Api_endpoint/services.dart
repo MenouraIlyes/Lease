@@ -26,4 +26,49 @@ class ApiService {
       throw Exception('Failed to login');
     }
   }
+
+  //Register Api
+  static Future<void> registerUser(String username, String password,
+      String email, String phoneNumber, String role) async {
+    try {
+      // Define the API endpoint URL
+      String apiUrl = 'http://192.168.1.103:3000/register';
+
+      // Create a map representing the user data
+      Map<String, dynamic> userData = {
+        'username': username,
+        'password': password,
+        'email': email,
+        'phone_number': phoneNumber,
+        'role': role
+      };
+
+      // Convert the user data map to a JSON string
+      String requestBody = jsonEncode(userData);
+
+      // Make a POST request to the API endpoint with JSON body
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json'
+        }, // Set content-type header
+        body: requestBody,
+      );
+
+      // Check if the request was successful (status code 201)
+      if (response.statusCode == 201) {
+        // User registered successfully
+        print('User registered successfully.');
+        // You can navigate to another screen or show a success message here
+      } else {
+        // Registration failed, print the error message
+        print('Registration failed: ${response.body}');
+        // You can display an error message to the user here
+      }
+    } catch (error) {
+      // Error occurred during registration process
+      print('Error registering user: $error');
+      // You can display an error message to the user here
+    }
+  }
 }
