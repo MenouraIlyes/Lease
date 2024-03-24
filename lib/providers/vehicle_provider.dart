@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lease/Api_endpoint/services.dart';
 import 'package:lease/models/vehicle_model.dart'; // Import your Vehicle model class
 
 final List<Vehicle> initialData = [
@@ -21,10 +22,22 @@ final List<Vehicle> initialData = [
 ];
 
 class VehicleProvider extends ChangeNotifier {
-  List<Vehicle> _vehicles = initialData; // List to hold instances of Vehicle
+  List<Vehicle> _vehicles = []; // List to hold instances of Vehicle
 
   // Method to get all vehicles
   List<Vehicle> get vehicles => _vehicles;
+
+  // Function to fetch vehicles from the backend
+  Future<void> fetchVehicles() async {
+    try {
+      _vehicles = await ApiService.fetchVehicles();
+      notifyListeners();
+    } catch (error) {
+      // Handle error appropriately
+      // print(_vehicles);
+      print('Error fetching vehicles: $error');
+    }
+  }
 
   // Method to add a new vehicle
   void addVehicle(Vehicle vehicle) {

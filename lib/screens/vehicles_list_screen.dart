@@ -7,16 +7,29 @@ import 'package:lease/screens/vehicle_detail_screen.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
 
-class VehicleListScreen extends StatelessWidget {
+class VehicleListScreen extends StatefulWidget {
   const VehicleListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Get the provider instance
-    VehicleProvider vehicleProvider = context.read<VehicleProvider>();
+  State<VehicleListScreen> createState() => _VehicleListScreenState();
+}
 
-    // Access the list of vehicles
-    List<Vehicle> vehicles = vehicleProvider.vehicles;
+class _VehicleListScreenState extends State<VehicleListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch vehicles when the screen initializes
+    Provider.of<VehicleProvider>(context, listen: false).fetchVehicles();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // // Get the provider instance
+    // VehicleProvider vehicleProvider = context.read<VehicleProvider>();
+
+    // // Access the list of vehicles
+    // List<Vehicle> vehicles = vehicleProvider.vehicles;
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -40,15 +53,29 @@ class VehicleListScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-        child: ListView.builder(
-          itemCount: vehicles.length,
-          itemBuilder: (context, index) {
-            final car = vehicles[index];
-            return PropertyCard(property: car);
-          },
-        ),
+      body: Consumer<VehicleProvider>(
+        builder: (context, vehicleProvider, _) {
+          // Access the list of vehicles
+          List<Vehicle> vehicles = vehicleProvider.vehicles;
+
+          // Show a loading indicator while fetching data
+          if (vehicles.isEmpty) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+            child: ListView.builder(
+              itemCount: vehicles.length,
+              itemBuilder: (context, index) {
+                final car = vehicles[index];
+                return PropertyCard(property: car);
+              },
+            ),
+          );
+        },
       ),
     );
   }

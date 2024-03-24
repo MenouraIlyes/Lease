@@ -90,10 +90,8 @@ class ApiService {
         final List<Vehicle> vehicles = responseData
             .map((vehicleData) => Vehicle.fromJson(vehicleData))
             .toList();
-        print(response.body);
         return vehicles;
       } else {
-        print(response.body);
         throw Exception('Failed to fetch vehicles');
       }
     } catch (error) {
