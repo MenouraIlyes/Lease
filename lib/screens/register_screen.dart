@@ -47,7 +47,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       await ApiService.registerUser(
           username, password, email, phoneNumber, role);
-      context.go('//home-registered');
+      context.go('/home-registered');
     } catch (error) {
       // Handle error (e.g., display error message)
       print('Error registering user: $error');

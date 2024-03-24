@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lease/models/vehicle_model.dart';
+import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:provider/provider.dart';
 
 class VehicleDetailsScreen extends StatefulWidget {
   const VehicleDetailsScreen({super.key});
@@ -34,6 +37,34 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the provider instance
+    VehicleProvider vehicleProvider = context.read<VehicleProvider>();
+
+    // Access the list of vehicles
+    List<Vehicle> vehicles = vehicleProvider.vehicles;
+
+    // Accessing a vehicle assuming there's at least one
+    Vehicle selectedVehicle = vehicles.isNotEmpty
+        ? vehicles.first
+        : Vehicle(
+            make: '',
+            model: '',
+            year: 0,
+            transmission: '',
+            seats: 0,
+            doors: 0,
+            mileage: '',
+            basePrice: '',
+            gasType: '',
+            description: '',
+            photos: [],
+          );
+
+    var favouritesProvider = context.read<VehicleProvider>();
+
+    // accessing favourites list
+    var favourite = favouritesProvider.favourites;
+
     return Scaffold(
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -63,7 +94,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                 },
                 child: Icon(
                   isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: isFavorite ? appRed : null,
+                  color: favourite.contains(selectedVehicle) ? appRed : null,
                   size: 30,
                 ),
               ),
@@ -89,19 +120,14 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
           height: double.maxFinite,
           child: Stack(
             children: [
-              Positioned(
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: double.maxFinite,
-                  height: 350,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/home1.jpg"),
-                        fit: BoxFit.cover),
-                  ),
+              // Display photos of the selected vehicle
+              for (String photoUrl in selectedVehicle.photos)
+                Image.network(
+                  photoUrl,
+                  width: 400, // Adjust width as needed
+                  height: 400, // Adjust height as needed
+                  fit: BoxFit.cover,
                 ),
-              ),
               Positioned(
                 top: 320,
                 child: Container(
@@ -124,14 +150,15 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                         children: [
                           // Make
                           Text(
-                            "Tesla",
+                            selectedVehicle.make,
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 35,
                                 color: appBlack.withOpacity(0.8)),
                           ),
+                          // Price
                           Text(
-                            "3000 DA",
+                            '${selectedVehicle.basePrice} DA',
                             style: GoogleFonts.poppins(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 25,
@@ -144,7 +171,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                       Container(
                         padding: EdgeInsets.only(left: 5),
                         child: Text(
-                          "Model X ",
+                          selectedVehicle.model,
                           style: GoogleFonts.poppins(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
@@ -176,7 +203,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                       ),
                       SizedBox(height: 5),
                       Text(
-                        "This is the car description, here you can put all the car details such as : this is a sports car and a comfortable car for a family gathering ...etc ",
+                        selectedVehicle.description,
                         style: GoogleFonts.poppins(),
                       ),
                       SizedBox(height: 40),
@@ -193,7 +220,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                "Diesel",
+                                selectedVehicle.gasType,
                                 style: GoogleFonts.poppins(color: appBlue),
                               )
                             ],
@@ -209,7 +236,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                "5",
+                                selectedVehicle.doors.toString(),
                                 style: GoogleFonts.poppins(color: appBlue),
                               )
                             ],
@@ -225,7 +252,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                "150 000 km",
+                                selectedVehicle.mileage,
                                 style: GoogleFonts.poppins(color: appBlue),
                               ),
                             ],
@@ -247,7 +274,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                "Automatic",
+                                selectedVehicle.transmission,
                                 style: GoogleFonts.poppins(color: appBlue),
                               ),
                             ],
@@ -261,7 +288,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                               ),
                               SizedBox(width: 5),
                               Text(
-                                "2011",
+                                selectedVehicle.year.toString(),
                                 style: GoogleFonts.poppins(color: appBlue),
                               ),
                             ],

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:lease/navigation/app_router.dart';
+import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -9,7 +11,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => VehicleProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

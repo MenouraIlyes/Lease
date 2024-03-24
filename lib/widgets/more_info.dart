@@ -16,6 +16,17 @@ class MoreWidget extends StatelessWidget {
           "Profile",
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
         ),
+        toolbarHeight: 80,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(color: appWhite, boxShadow: [
+            BoxShadow(
+              color: appBlack.withOpacity(0.1),
+              blurRadius: 1.0,
+              spreadRadius: 1.0,
+              offset: const Offset(0.0, 1.0),
+            )
+          ]),
+        ),
         actions: [
           IconButton(
             icon: Icon(FontAwesomeIcons.moon),

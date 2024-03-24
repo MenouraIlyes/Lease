@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:lease/models/vehicle_model.dart';
+import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/widgets/car_trips.dart';
 import 'package:lease/widgets/front_home_page.dart';
 import 'package:lease/widgets/liked_cars.dart';
 import 'package:lease/widgets/more_info.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
