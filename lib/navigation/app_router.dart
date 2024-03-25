@@ -9,13 +9,13 @@ import 'package:lease/shared/colors.dart';
 
 class AppRouter {
   late final GoRouter router = GoRouter(
-    initialLocation: '/home', // Set the initial location
+    initialLocation: '/welcome', // Set the initial location
     routes: <GoRoute>[
       GoRoute(
         name: 'welcome',
         path: '/welcome',
         builder: (BuildContext context, GoRouterState state) {
-          return const WelcomeScreen();
+          return const HomeScreen();
         },
       ),
       GoRoute(
@@ -29,7 +29,7 @@ class AppRouter {
         name: 'home',
         path: '/home',
         builder: (BuildContext context, GoRouterState state) {
-          return const VehicleListScreen();
+          return const HomeScreen();
         },
       ),
       GoRoute(

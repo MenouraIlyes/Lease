@@ -44,9 +44,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String email = _email.text;
     String phoneNumber = _phoneNumber.text;
 
+    // Check if any required field is empty
+    if (username.isEmpty ||
+        password.isEmpty ||
+        email.isEmpty ||
+        phoneNumber.isEmpty) {
+      // Show message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please fill in all required fields.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return; // Exit the function if any field is empty
+    }
+
+    // Check if a role is selected
+    if (role.isEmpty) {
+      // Show message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please select a role.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return; // Exit the function if role is not selected
+    }
+
     try {
       await ApiService.registerUser(
           username, password, email, phoneNumber, role);
+      // Show styled Snackbar on successful registration
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Registration successful!',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+          duration: Duration(seconds: 3),
+          action: SnackBarAction(
+            label: 'OK',
+            textColor: Colors.white,
+            onPressed: () {},
+          ),
+        ),
+      );
       context.go('/home-registered');
     } catch (error) {
       // Handle error (e.g., display error message)

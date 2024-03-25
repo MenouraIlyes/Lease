@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:lease/models/reservation_model.dart';
 import 'package:lease/models/vehicle_model.dart';
 
 class ApiService {
@@ -96,6 +97,41 @@ class ApiService {
       }
     } catch (error) {
       throw Exception('Failed to fetch vehicles: $error');
+    }
+  }
+
+  // Create Reservation Api
+  static Future<void> createReservation(Reservation reservation) async {
+    try {
+      // Define the API endpoint URL
+      String apiUrl = 'http://192.168.1.105:3000/reservation';
+
+      // Convert the reservation object to a JSON string
+      String requestBody = jsonEncode(reservation.toJson());
+
+      // Make a POST request to the API endpoint with JSON body
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      );
+
+      // Check if the request was successful (status code 201)
+      if (response.statusCode == 201) {
+        // Reservation created successfully
+        print('Reservation created successfully.');
+        // You can navigate to another screen or show a success message here
+      } else {
+        // Reservation creation failed, print the error message
+        print('Reservation creation failed: ${response.body}');
+        // You can display an error message to the user here
+      }
+    } catch (error) {
+      // Error occurred during reservation creation process
+      print('Error creating reservation: $error');
+      // You can display an error message to the user here
     }
   }
 }

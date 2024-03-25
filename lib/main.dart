@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lease/navigation/app_router.dart';
+import 'package:lease/providers/reservation_provider.dart';
 import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,8 +13,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => VehicleProvider(),
+    MultiProvider(
+      // Use MultiProvider to wrap multiple providers
+      providers: [
+        ChangeNotifierProvider(create: (_) => VehicleProvider()),
+        ChangeNotifierProvider(create: (_) => ReservationProvider()),
+      ],
       child: const MyApp(),
     ),
   );

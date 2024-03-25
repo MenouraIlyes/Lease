@@ -5,30 +5,40 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 enum CalendarOptions { year, month, week, day }
 
 class AppCalendar extends StatefulWidget {
-  const AppCalendar({super.key});
+  final Function(DateTime?, DateTime?) onSelectionChanged;
+
+  const AppCalendar({Key? key, required this.onSelectionChanged})
+      : super(key: key);
 
   @override
   State<AppCalendar> createState() => _AppCalendarState();
 }
 
 class _AppCalendarState extends State<AppCalendar> {
+  DateTime? _startDate;
+  DateTime? _endDate;
+
   @override
   Widget build(BuildContext context) {
     return SfDateRangePicker(
       rangeSelectionColor: appBlue,
       endRangeSelectionColor: appBlue,
       startRangeSelectionColor: appBlue,
-      onSelectionChanged: _onSelectedChanged,
+      onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
+        setState(() {
+          _startDate = args.value.startDate;
+          _endDate = args.value.endDate;
+        });
+        widget.onSelectionChanged(_startDate, _endDate);
+        print(_startDate);
+        print(_endDate);
+      },
       selectionMode: DateRangePickerSelectionMode.range,
       initialSelectedRange: PickerDateRange(
         DateTime.now().subtract(const Duration(days: 5)),
         DateTime.now().add(const Duration(days: 5)),
       ),
     );
-  }
-
-  void _onSelectedChanged(DateRangePickerSelectionChangedArgs args) {
-    print(args.value);
   }
 }
 

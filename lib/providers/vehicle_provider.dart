@@ -2,25 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lease/Api_endpoint/services.dart';
 import 'package:lease/models/vehicle_model.dart'; // Import your Vehicle model class
 
-final List<Vehicle> initialData = [
-  Vehicle(
-    make: 'Toyota',
-    model: 'Corolla',
-    year: 2022,
-    transmission: 'Automatic',
-    seats: 5,
-    doors: 4,
-    mileage: '20,000 km',
-    gasType: 'Petrol',
-    description: 'A reliable sedan.',
-    basePrice: '20000',
-    photos: [
-      'https://source.unsplash.com/random/?toyota',
-      'https://source.unsplash.com/random/?toyota'
-    ],
-  ),
-];
-
 class VehicleProvider extends ChangeNotifier {
   List<Vehicle> _vehicles = []; // List to hold instances of Vehicle
 

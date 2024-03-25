@@ -7,7 +7,10 @@ import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
 
 class VehicleDetailsScreen extends StatefulWidget {
-  const VehicleDetailsScreen({super.key});
+  final Vehicle selectedVehicle; // Selected vehicle data
+
+  const VehicleDetailsScreen({Key? key, required this.selectedVehicle})
+      : super(key: key);
 
   @override
   State<VehicleDetailsScreen> createState() => _VehicleDetailsScreenState();
@@ -37,28 +40,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Get the provider instance
-    VehicleProvider vehicleProvider = context.read<VehicleProvider>();
-
-    // Access the list of vehicles
-    List<Vehicle> vehicles = vehicleProvider.vehicles;
-
-    // Accessing a vehicle assuming there's at least one
-    Vehicle selectedVehicle = vehicles.isNotEmpty
-        ? vehicles.first
-        : Vehicle(
-            make: '',
-            model: '',
-            year: 0,
-            transmission: '',
-            seats: 0,
-            doors: 0,
-            mileage: '',
-            basePrice: '',
-            gasType: '',
-            description: '',
-            photos: [],
-          );
+    Vehicle selectedVehicle = widget.selectedVehicle;
 
     var favouritesProvider = context.read<VehicleProvider>();
 

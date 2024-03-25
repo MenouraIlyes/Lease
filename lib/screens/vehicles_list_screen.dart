@@ -24,12 +24,6 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // // Get the provider instance
-    // VehicleProvider vehicleProvider = context.read<VehicleProvider>();
-
-    // // Access the list of vehicles
-    // List<Vehicle> vehicles = vehicleProvider.vehicles;
-
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -114,7 +108,10 @@ class _PropertyCardState extends State<PropertyCard> {
             // Navigate to the property details screen when the picture is clicked
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => VehicleDetailsScreen()),
+              MaterialPageRoute(
+                builder: (context) =>
+                    VehicleDetailsScreen(selectedVehicle: widget.property),
+              ),
             );
           },
           child: Stack(
