@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lease/navigation/app_router.dart';
 import 'package:lease/providers/reservation_provider.dart';
+import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -18,6 +19,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => VehicleProvider()),
         ChangeNotifierProvider(create: (_) => ReservationProvider()),
+        ChangeNotifierProvider(create: (_) => UserProfileProvider()),
       ],
       child: const MyApp(),
     ),

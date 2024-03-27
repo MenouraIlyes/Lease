@@ -15,7 +15,7 @@ class AppRouter {
         name: 'welcome',
         path: '/welcome',
         builder: (BuildContext context, GoRouterState state) {
-          return const HomeScreen();
+          return const WelcomeScreen();
         },
       ),
       GoRoute(

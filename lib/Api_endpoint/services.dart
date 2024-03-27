@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:lease/models/reservation_model.dart';
+import 'package:lease/models/user_profile_model.dart';
 import 'package:lease/models/vehicle_model.dart';
 
 class ApiService {
@@ -71,6 +72,30 @@ class ApiService {
       // Error occurred during registration process
       print('Error registering user: $error');
       // You can display an error message to the user here
+    }
+  }
+
+  // Fetch user profile by username
+  static Future<UserProfile> fetchUserProfile(String username) async {
+    String apiUrl = 'http://192.168.1.105:3000';
+
+    try {
+      final http.Response response = await http.get(
+        Uri.parse('$apiUrl/profile/$username'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // If the server returns a successful response, parse the JSON
+        final Map<String, dynamic> userData = json.decode(response.body);
+        return UserProfile.fromJson(userData);
+      } else {
+        throw Exception('Failed to fetch UserProfile');
+      }
+    } catch (error) {
+      throw Exception('Failed to fetch UserProfile: $error');
     }
   }
 

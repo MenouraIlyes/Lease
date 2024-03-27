@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/Api_endpoint/services.dart';
+import 'package:lease/models/user_profile_model.dart';
+import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/screens/register_screen.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,6 +41,14 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       final String token = responseData['token'];
       isLoggedIn = true;
+
+      //Fetch user profile after successful login
+      final userProfileData = await ApiService.fetchUserProfile(_username.text);
+
+      //Store the user profile in the provider
+      Provider.of<UserProfileProvider>(context, listen: false)
+          .updateUserProfile(userProfileData);
+
       // Show styled Snackbar on successful registration
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

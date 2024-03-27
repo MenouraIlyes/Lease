@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lease/models/user_profile_model.dart';
+import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/screens/edit_profile_screen.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:provider/provider.dart';
 
 class MoreWidget extends StatelessWidget {
   const MoreWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Access the UserProfileProvider
+    UserProfile? userProfile =
+        Provider.of<UserProfileProvider>(context).userProfile;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -69,12 +76,12 @@ class MoreWidget extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                'Menoura Ilyes',
+                userProfile?.username ?? '',
                 style: GoogleFonts.poppins(
                     fontSize: 16, fontWeight: FontWeight.bold),
               ),
               Text(
-                'ilyesmenoura19@gmail.com',
+                userProfile?.email ?? '',
                 style: GoogleFonts.poppins(),
               ),
               const SizedBox(height: 20),

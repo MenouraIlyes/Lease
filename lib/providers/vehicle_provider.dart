@@ -20,18 +20,6 @@ class VehicleProvider extends ChangeNotifier {
     }
   }
 
-  // Method to add a new vehicle
-  void addVehicle(Vehicle vehicle) {
-    _vehicles.add(vehicle);
-    notifyListeners(); // Notify listeners of change
-  }
-
-  // Method to remove a vehicle
-  void removeVehicle(int index) {
-    _vehicles.removeAt(index);
-    notifyListeners(); // Notify listeners of change
-  }
-
   // Likes cars
   final List<Vehicle> _favourites = [];
   // Method to ge all favourites
