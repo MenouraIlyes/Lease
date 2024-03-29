@@ -53,14 +53,21 @@ class AppRouter {
         name: 'home-logged-in',
         path: '/home-logged-in',
         builder: (BuildContext context, GoRouterState state) {
-          return const HomeScreen(); // Your HomeScreen widget
+          return const HomeScreen();
         },
       ),
       GoRoute(
         name: 'home-registered',
         path: '/home-registered',
         builder: (BuildContext context, GoRouterState state) {
-          return const HomeScreen(); // Your HomeScreen widget
+          return const HomeScreen();
+        },
+      ),
+      GoRoute(
+        name: 'vehicle_list_screen',
+        path: '/vehicle_list_screen',
+        builder: (BuildContext context, GoRouterState state) {
+          return const VehicleListScreen();
         },
       ),
     ],

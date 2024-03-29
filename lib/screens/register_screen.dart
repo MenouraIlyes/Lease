@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/Api_endpoint/services.dart';
-import 'package:lease/screens/home_screen.dart';
+import 'package:lease/models/user_profile_model.dart';
+import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -74,7 +76,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       await ApiService.registerUser(
           username, password, email, phoneNumber, role);
-      // Show styled Snackbar on successful registration
+
+      // Create a UserProfile object with the new information
+      var newUserProfile = UserProfile(
+        username: username,
+        password: password,
+        email: email,
+        phoneNumber: phoneNumber,
+        role: role,
+      );
+      // Access user profile provider instance
+      var userProfileProvider =
+          Provider.of<UserProfileProvider>(context, listen: false);
+      // Update user profile provider with registration info
+      userProfileProvider.updateUserProfile(newUserProfile);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.green,
@@ -100,7 +116,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
       context.go('/home-registered');
     } catch (error) {
-      // Handle error (e.g., display error message)
       print('Error registering user: $error');
     }
   }

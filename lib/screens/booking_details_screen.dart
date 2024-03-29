@@ -116,7 +116,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                           ),
                         ),
                         FilledButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go('/vehicle_list_screen');
+                          },
                           style: FilledButton.styleFrom(
                               backgroundColor: appBlue,
                               minimumSize: const Size(100, 56.0),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/Api_endpoint/services.dart';
-import 'package:lease/models/user_profile_model.dart';
 import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/screens/register_screen.dart';
 import 'package:lease/shared/colors.dart';
@@ -18,7 +17,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late final TextEditingController _username;
   late final TextEditingController _password;
-  bool isLoggedIn = false;
+
   @override
   void initState() {
     _username = TextEditingController();
@@ -40,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _password.text,
       );
       final String token = responseData['token'];
-      isLoggedIn = true;
 
       //Fetch user profile after successful login
       final userProfileData = await ApiService.fetchUserProfile(_username.text);

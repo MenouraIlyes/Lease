@@ -23,6 +23,23 @@ class UserProfile {
     );
   }
 
+  dynamic operator [](String key) {
+    switch (key) {
+      case 'username':
+        return username;
+      case 'password':
+        return password;
+      case 'email':
+        return email;
+      case 'phoneNumber':
+        return phoneNumber;
+      case 'role':
+        return role;
+      default:
+        throw ArgumentError('Invalid key: $key');
+    }
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['username'] = this.username;

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lease/providers/reservation_provider.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 enum CalendarOptions { year, month, week, day }
@@ -15,8 +17,16 @@ class AppCalendar extends StatefulWidget {
 }
 
 class _AppCalendarState extends State<AppCalendar> {
+  late ReservationProvider _reservationProvider; // Declare ReservationProvider
   DateTime? _startDate;
   DateTime? _endDate;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Access the ReservationProvider from the context
+    _reservationProvider = Provider.of<ReservationProvider>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +40,11 @@ class _AppCalendarState extends State<AppCalendar> {
           _endDate = args.value.endDate;
         });
         widget.onSelectionChanged(_startDate, _endDate);
-        print(_startDate);
-        print(_endDate);
       },
       selectionMode: DateRangePickerSelectionMode.range,
       initialSelectedRange: PickerDateRange(
-        DateTime.now().subtract(const Duration(days: 5)),
-        DateTime.now().add(const Duration(days: 5)),
-      ),
+          DateTime.now().subtract(const Duration(days: 5)),
+          DateTime.now().add(const Duration(days: 5))),
     );
   }
 }
