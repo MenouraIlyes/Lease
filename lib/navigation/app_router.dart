@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lease/screens/add_vehicle_screen.dart';
 import 'package:lease/screens/booking_details_screen.dart';
 import 'package:lease/screens/home_screen.dart';
 import 'package:lease/screens/login_register_screen.dart';
@@ -9,7 +10,7 @@ import 'package:lease/shared/colors.dart';
 
 class AppRouter {
   late final GoRouter router = GoRouter(
-    initialLocation: '/welcome', // Set the initial location
+    initialLocation: '/welcome', // the initial location
     routes: <GoRoute>[
       GoRoute(
         name: 'welcome',

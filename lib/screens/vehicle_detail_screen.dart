@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -104,8 +106,8 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
             children: [
               // Display photos of the selected vehicle
               for (String photoUrl in selectedVehicle.photos)
-                Image.network(
-                  photoUrl,
+                Image.file(
+                  File(photoUrl), // Provide the correct file path here
                   width: 400, // Adjust width as needed
                   height: 400, // Adjust height as needed
                   fit: BoxFit.cover,

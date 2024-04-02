@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +9,50 @@ import 'package:lease/screens/add_vehicle_screen.dart';
 import 'package:lease/screens/vehicle_detail_screen.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
+
+// Custom loading indicator widget
+class CustomLoadingIndicator extends StatelessWidget {
+  final String message;
+
+  CustomLoadingIndicator({this.message = 'Loading...'});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              message,
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class FleetWidget extends StatefulWidget {
   const FleetWidget({super.key});
@@ -54,7 +100,7 @@ class _FleetWidgetState extends State<FleetWidget> {
           // Show a loading indicator while fetching data
           if (vehicles.isEmpty) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CustomLoadingIndicator(message: 'No vehicles available'),
             );
           }
 
@@ -143,8 +189,8 @@ class _PropertyCardState extends State<PropertyCard> {
                       currentPage = value;
                     });
                   },
-                  children: widget.property.photos.map((imageUrl) {
-                    return Image.network(imageUrl, fit: BoxFit.cover);
+                  children: widget.property.photos.map((imagePath) {
+                    return Image.file(File(imagePath), fit: BoxFit.cover);
                   }).toList(),
                 ),
               ),

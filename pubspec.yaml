@@ -52,6 +52,7 @@ dependencies:
   line_awesome_flutter: ^2.0.0
   get: ^4.6.6
   provider: ^6.1.2
+  image_picker: ^1.0.7
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -93,6 +94,7 @@ flutter:
     - assets/satisfied.png
     - assets/footer.jpg
     - assets/fleet.png
+    - assets/car.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

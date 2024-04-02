@@ -5,10 +5,11 @@ import 'package:lease/models/user_profile_model.dart';
 import 'package:lease/models/vehicle_model.dart';
 
 class ApiService {
+  static final String mainUrl = "http://192.168.1.107:3000";
   //Login Api
   static Future<Map<String, dynamic>> login(
       String email, String password) async {
-    final String apiUrl = 'http://192.168.1.105:3000/login';
+    final String apiUrl = '$mainUrl/login';
 
     final Map<String, String> data = {
       'username': email.trim(),
@@ -31,23 +32,13 @@ class ApiService {
   }
 
   //Register Api
-  static Future<void> registerUser(String username, String password,
-      String email, String phoneNumber, String role) async {
+  static Future<void> registerUser(UserProfile userProfile) async {
     try {
       // Define the API endpoint URL
-      String apiUrl = 'http://192.168.1.105:3000/register';
+      String apiUrl = '$mainUrl/register';
 
-      // Create a map representing the user data
-      Map<String, dynamic> userData = {
-        'username': username,
-        'password': password,
-        'email': email,
-        'phone_number': phoneNumber,
-        'role': role
-      };
-
-      // Convert the user data map to a JSON string
-      String requestBody = jsonEncode(userData);
+      // Convert the user profile object to JSON
+      String requestBody = jsonEncode(userProfile.toJson());
 
       // Make a POST request to the API endpoint with JSON body
       var response = await http.post(
@@ -77,11 +68,9 @@ class ApiService {
 
   // Fetch user profile by username
   static Future<UserProfile> fetchUserProfile(String username) async {
-    String apiUrl = 'http://192.168.1.105:3000';
-
     try {
       final http.Response response = await http.get(
-        Uri.parse('$apiUrl/profile/$username'),
+        Uri.parse('$mainUrl/profile/$username'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -99,9 +88,39 @@ class ApiService {
     }
   }
 
+  // Post Vehciles Api
+  static Future<void> postVehicle(Vehicle vehicle) async {
+    final String url = '$mainUrl/vehicle';
+
+    print(vehicle);
+    // Convert Vehicle object to JSON
+    final Map<String, dynamic> vehicleData = vehicle.toJson();
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(vehicleData),
+      );
+
+      if (response.statusCode == 200) {
+        // Vehicle posted successfully
+        print('Vehicle posted successfully');
+      } else {
+        // Error posting vehicle
+        print('Failed to post vehicle. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Exception occurred
+      print('Exception while posting vehicle: $e');
+    }
+  }
+
   // Fetch Vehicles Api
   static Future<List<Vehicle>> fetchVehicles() async {
-    final String apiUrl = 'http://192.168.1.105:3000/vehicle';
+    final String apiUrl = '$mainUrl/vehicle';
 
     try {
       final http.Response response = await http.get(
@@ -129,7 +148,7 @@ class ApiService {
   static Future<void> createReservation(Reservation reservation) async {
     try {
       // Define the API endpoint URL
-      String apiUrl = 'http://192.168.1.105:3000/reservation';
+      String apiUrl = '$mainUrl/reservation';
 
       // Convert the reservation object to a JSON string
       String requestBody = jsonEncode(reservation.toJson());

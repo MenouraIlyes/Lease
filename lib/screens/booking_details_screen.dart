@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lease/models/booking_steps.dart';
+import 'package:lease/screens/vehicles_list_screen.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:lease/widgets/select_date_widget.dart';
 import 'package:lease/widgets/select_destination_widget.dart';
@@ -117,7 +118,12 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                         ),
                         FilledButton.icon(
                           onPressed: () {
-                            context.go('/vehicle_list_screen');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => VehicleListScreen(),
+                              ),
+                            );
                           },
                           style: FilledButton.styleFrom(
                               backgroundColor: appBlue,

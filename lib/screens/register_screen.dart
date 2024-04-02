@@ -74,9 +74,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     try {
-      await ApiService.registerUser(
-          username, password, email, phoneNumber, role);
-
       // Create a UserProfile object with the new information
       var newUserProfile = UserProfile(
         username: username,
@@ -85,6 +82,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         phoneNumber: phoneNumber,
         role: role,
       );
+
+      // Call the registerUser function with the UserProfile object
+      await ApiService.registerUser(newUserProfile);
+
       // Access user profile provider instance
       var userProfileProvider =
           Provider.of<UserProfileProvider>(context, listen: false);
@@ -123,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: appWhite,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
