@@ -2,12 +2,17 @@ import 'dart:io';
 
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lease/Api_endpoint/services.dart';
 import 'package:lease/models/vehicle_model.dart';
+import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/screens/add_vehicle_screen.dart';
 import 'package:lease/screens/vehicle_detail_screen.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:lease/shared/confirmation_dialogue.dart';
+import 'package:lease/widgets/fleet_details_screen.dart';
 import 'package:provider/provider.dart';
 
 // Custom loading indicator widget
@@ -92,27 +97,41 @@ class _FleetWidgetState extends State<FleetWidget> {
           ),
         ),
       ),
-      body: Consumer<VehicleProvider>(
-        builder: (context, vehicleProvider, _) {
-          // Access the list of vehicles
-          List<Vehicle> vehicles = vehicleProvider.vehicles;
+      body: Consumer<UserProfileProvider>(
+        builder: (context, userProfileProvider, _) {
+          // Access the agency username from the user profile
+          final agencyUsername = userProfileProvider.userProfile!.username;
 
-          // Show a loading indicator while fetching data
-          if (vehicles.isEmpty) {
-            return Center(
-              child: CustomLoadingIndicator(message: 'No vehicles available'),
-            );
-          }
+          return Consumer<VehicleProvider>(
+            builder: (context, vehicleProvider, _) {
+              // Access the list of vehicles
+              List<Vehicle> vehicles = vehicleProvider.vehicles;
 
-          return Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-            child: ListView.builder(
-              itemCount: vehicles.length,
-              itemBuilder: (context, index) {
-                final car = vehicles[index];
-                return PropertyCard(property: car);
-              },
-            ),
+              // Filter the vehicles based on the agency username
+              List<Vehicle> agencyVehicles = vehicles
+                  .where((vehicle) => vehicle.agencyName == agencyUsername)
+                  .toList();
+
+              // Show a loading indicator while fetching data
+              if (agencyVehicles.isEmpty) {
+                return Center(
+                  child: CustomLoadingIndicator(
+                      message: 'No vehicles available for your agency'),
+                );
+              }
+
+              return Padding(
+                padding:
+                    const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                child: ListView.builder(
+                  itemCount: agencyVehicles.length,
+                  itemBuilder: (context, index) {
+                    final car = agencyVehicles[index];
+                    return PropertyCard(property: car);
+                  },
+                ),
+              );
+            },
           );
         },
       ),
@@ -169,7 +188,7 @@ class _PropertyCardState extends State<PropertyCard> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    VehicleDetailsScreen(selectedVehicle: widget.property),
+                    FleetDetailsScreen(selectedVehicle: widget.property),
               ),
             );
           },
@@ -235,8 +254,27 @@ class _PropertyCardState extends State<PropertyCard> {
                 ),
               ),
               const SizedBox(height: 8.0),
-              Text(
-                '${widget.property.basePrice} DA',
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${widget.property.basePrice} DA',
+                  ),
+                  IconButton(
+                    icon: Icon(FontAwesomeIcons.trash, color: appRed),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return ConfirmationDialog(
+                            onConfirm: () =>
+                                ApiService.deleteVehicle(widget.property.id),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 8.0),
               Text(

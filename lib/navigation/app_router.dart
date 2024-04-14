@@ -7,6 +7,8 @@ import 'package:lease/screens/login_register_screen.dart';
 import 'package:lease/screens/vehicles_list_screen.dart';
 import 'package:lease/screens/welcom_screen.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:lease/widgets/fleet.dart';
+import 'package:lease/widgets/map_widget.dart';
 
 class AppRouter {
   late final GoRouter router = GoRouter(
@@ -16,7 +18,7 @@ class AppRouter {
         name: 'welcome',
         path: '/welcome',
         builder: (BuildContext context, GoRouterState state) {
-          return const WelcomeScreen();
+          return WelcomeScreen();
         },
       ),
       GoRoute(

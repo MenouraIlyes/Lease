@@ -1,4 +1,5 @@
 class Vehicle {
+  final String? id; // Making id optional
   final String make;
   final String model;
   final int year;
@@ -10,8 +11,11 @@ class Vehicle {
   final String description;
   final String basePrice;
   final List<String> photos;
+  final String? agencyName;
+  final String? agencyNumber;
 
   Vehicle({
+    this.id, // id is optional
     required this.make,
     required this.model,
     required this.year,
@@ -23,10 +27,13 @@ class Vehicle {
     required this.description,
     required this.basePrice,
     required this.photos,
+    this.agencyName,
+    this.agencyNumber,
   });
 
   factory Vehicle.fromJson(Map<String, dynamic> json) {
     return Vehicle(
+      id: json['_id'], // Access id from JSON data
       make: json['make'],
       model: json['model'],
       year: json['year'],
@@ -38,11 +45,14 @@ class Vehicle {
       description: json['description'],
       basePrice: json['basePrice'],
       photos: List<String>.from(json['photos']),
+      agencyName: json['agencyName'],
+      agencyNumber: json['agencyNumber'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      if (id != null) 'id': id, // Include id only if it's not null
       'make': make,
       'model': model,
       'year': year,
@@ -54,6 +64,8 @@ class Vehicle {
       'description': description,
       'basePrice': basePrice,
       'photos': photos,
+      'agencyName': agencyName,
+      'agencyNumber': agencyNumber,
     };
   }
 }

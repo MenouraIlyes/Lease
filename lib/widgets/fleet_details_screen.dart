@@ -8,17 +8,17 @@ import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
 
-class VehicleDetailsScreen extends StatefulWidget {
+class FleetDetailsScreen extends StatefulWidget {
   final Vehicle selectedVehicle; // Selected vehicle data
 
-  const VehicleDetailsScreen({Key? key, required this.selectedVehicle})
+  const FleetDetailsScreen({Key? key, required this.selectedVehicle})
       : super(key: key);
 
   @override
-  State<VehicleDetailsScreen> createState() => _VehicleDetailsScreenState();
+  State<FleetDetailsScreen> createState() => _FleetDetailsScreenState();
 }
 
-class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
+class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
   late ScrollController _scrollController; // Scrolling
   bool isFavorite = false; // Track the state of the button
 
@@ -28,8 +28,8 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
     _scrollController = ScrollController(initialScrollOffset: 0.0);
     _scrollController.addListener(() {
       // Add logic to stop scrolling after a certain point
-      if (_scrollController.offset > 400.0) {
-        _scrollController.jumpTo(400.0);
+      if (_scrollController.offset > 60.0) {
+        _scrollController.jumpTo(60.0);
       }
     });
   }
@@ -44,59 +44,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
   Widget build(BuildContext context) {
     Vehicle selectedVehicle = widget.selectedVehicle;
 
-    var favouritesProvider = context.read<VehicleProvider>();
-
-    // accessing favourites list
-    var favourite = favouritesProvider.favourites;
-
     return Scaffold(
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: appBlack.withOpacity(0.5),
-              blurRadius: 1.0,
-              spreadRadius: 1.0,
-              offset: const Offset(0.0, -1.0),
-            )
-          ],
-        ),
-        child: BottomAppBar(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          notchMargin: 0,
-          color: Colors.white,
-          surfaceTintColor: Colors.white,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    // Toggle the state of the button
-                    isFavorite = !isFavorite;
-                  });
-                },
-                child: Icon(
-                  isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: favourite.contains(selectedVehicle) ? appRed : null,
-                  size: 30,
-                ),
-              ),
-              FilledButton.icon(
-                onPressed: () {},
-                style: FilledButton.styleFrom(
-                    backgroundColor: appBlue,
-                    minimumSize: const Size(100, 56.0),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    )),
-                label: const Text('Book now'),
-                icon: const Icon(FontAwesomeIcons.bookmark),
-              )
-            ],
-          ),
-        ),
-      ),
       body: SingleChildScrollView(
         controller: _scrollController,
         child: Container(
@@ -282,76 +230,21 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                         ],
                       ),
                       SizedBox(height: 40),
-                      // Dates
-                      Card(
-                        surfaceTintColor: appWhite,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 14, left: 15),
-                              child: Text(
-                                "Pick-up & Drop-off",
-                                style: GoogleFonts.poppins(),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(
-                                "Pick-up",
-                                style: GoogleFonts.poppins(color: appBlue),
-                              ),
-                              subtitle: Text("10/02/2024 - 10:00 pm"),
-                            ),
-                            ListTile(
-                              title: Text(
-                                "Drop-off",
-                                style: GoogleFonts.poppins(color: appBlue),
-                              ),
-                              subtitle: Text("15/02/2024 - 04:00 pm"),
-                            ),
-                          ],
+
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, top: 20),
+                        child: FilledButton.icon(
+                          onPressed: () {},
+                          style: FilledButton.styleFrom(
+                              backgroundColor: appBlue,
+                              minimumSize: const Size(100, 56.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              )),
+                          label: const Text('Change Vehicle Informations'),
+                          icon: const Icon(FontAwesomeIcons.penToSquare),
                         ),
-                      ),
-                      // Agency (User) informations
-                      SizedBox(height: 40),
-                      Text(
-                        "Agencey Informations",
-                        style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: appBlack.withOpacity(0.8)),
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Text(
-                            'Name :',
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600, color: appBlue),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            '${selectedVehicle.agencyName}',
-                            style: GoogleFonts.poppins(),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Text(
-                            'Phone Number :',
-                            style: GoogleFonts.poppins(
-                                fontWeight: FontWeight.w600, color: appBlue),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            '${selectedVehicle.agencyNumber}',
-                            style: GoogleFonts.poppins(),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 40),
+                      )
                     ],
                   ),
                 ),

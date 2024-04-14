@@ -6,8 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lease/Api_endpoint/services.dart';
+import 'package:lease/models/user_profile_model.dart';
 import 'package:lease/models/vehicle_model.dart';
+import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:provider/provider.dart';
 
 class AddVehicleScreen extends StatefulWidget {
   const AddVehicleScreen({super.key});
@@ -45,6 +48,11 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
 
   void _addVehicle() async {
     try {
+      // Access user provider to get agency information
+      final userProvider = context.read<UserProfileProvider>();
+      final agencyName = userProvider.userProfile?.username;
+      final agencyNumber = userProvider.userProfile?.phoneNumber;
+
       // Create a Vehicle object with user input
       final Vehicle vehicle = Vehicle(
         make: makeController.text,
@@ -58,9 +66,10 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
         description: descriptionController.text,
         basePrice: basePriceController.text,
         photos: _selectedImages.map((file) => file.path).toList(),
+        agencyName: agencyName,
+        agencyNumber: agencyNumber,
       );
 
-      print("this is the vehicle data before passing it : $vehicle");
       // Call the postVehicle function with the Vehicle object
       await ApiService.postVehicle(vehicle);
 
@@ -88,7 +97,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
         ),
       );
 
-      Navigator.of(context).pop();
+      context.go('/home');
     } catch (error) {
       print('Error registering user: $error');
     }

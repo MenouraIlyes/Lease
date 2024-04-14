@@ -92,7 +92,6 @@ class ApiService {
   static Future<void> postVehicle(Vehicle vehicle) async {
     final String url = '$mainUrl/vehicle';
 
-    print(vehicle);
     // Convert Vehicle object to JSON
     final Map<String, dynamic> vehicleData = vehicle.toJson();
 
@@ -141,6 +140,34 @@ class ApiService {
       }
     } catch (error) {
       throw Exception('Failed to fetch vehicles: $error');
+    }
+  }
+
+  // Delete vehicle Api
+  static Future<void> deleteVehicle(String? id) async {
+    final String url = '$mainUrl/vehicle/$id';
+
+    try {
+      final http.Response response = await http.delete(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Vehicle deleted successfully
+        print('Vehicle deleted successfully');
+      } else if (response.statusCode == 404) {
+        // Vehicle not found
+        print('Vehicle not found. Status code: ${response.statusCode}');
+      } else {
+        // Error deleting vehicle
+        print('Failed to delete vehicle. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Exception occurred
+      print('Exception while deleting vehicle: $e');
     }
   }
 
