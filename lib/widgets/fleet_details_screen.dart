@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/models/vehicle_model.dart';
 import 'package:lease/providers/vehicle_provider.dart';
+import 'package:lease/screens/update_vehicle.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -234,7 +235,13 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 40, top: 20),
                         child: FilledButton.icon(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UpdateVehicleScreen()),
+                            );
+                          },
                           style: FilledButton.styleFrom(
                               backgroundColor: appBlue,
                               minimumSize: const Size(100, 56.0),

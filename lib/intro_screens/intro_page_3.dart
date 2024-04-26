@@ -16,10 +16,8 @@ class _IntroPage3State extends State<IntroPage3> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Lottie.network(
-            'https://lottie.host/99762847-3d39-49ee-a531-ade51a35da10/QdkXeyiw9H.json',
-            height: 300,
-            width: 300),
+        Lottie.asset('assets/Intro3.json',
+            height: 300, width: 300, repeat: false),
         SizedBox(height: 20),
         Text(
           "Become a partner !",
@@ -36,7 +34,7 @@ class _IntroPage3State extends State<IntroPage3> {
             textAlign: TextAlign.center,
             style: GoogleFonts.kalam(fontSize: 20, fontWeight: FontWeight.w600),
           ),
-        )
+        ),
       ],
     );
   }

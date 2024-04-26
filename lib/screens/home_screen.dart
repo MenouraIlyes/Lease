@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:lease/models/user_profile_model.dart';
 import 'package:lease/providers/user_profile_provider.dart';
@@ -45,10 +46,16 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     final List<GButton> tabs = [
-      GButton(
-        icon: Icons.search_outlined,
-        text: 'Search',
-      ),
+      if (isAgency)
+        GButton(
+          icon: FontAwesomeIcons.house,
+          text: 'Home',
+        )
+      else
+        GButton(
+          icon: Icons.search_outlined,
+          text: 'Search',
+        ),
       if (isAgency)
         GButton(
           icon: FontAwesomeIcons.car,
@@ -82,9 +89,14 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         tabs: tabs,
       ),
-      appBar: _selectedIndex == 0
+      appBar: _selectedIndex == 0 && isAgency
           ? AppBar(
               toolbarHeight: 80,
+              title: Text(
+                'Welcome "${userProfile.username}"',
+                style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+              ),
+              centerTitle: true,
               flexibleSpace: Container(
                 decoration: BoxDecoration(color: appWhite, boxShadow: [
                   BoxShadow(
@@ -94,67 +106,82 @@ class _HomeScreenState extends State<HomeScreen> {
                     offset: const Offset(0.0, 1.0),
                   )
                 ]),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      right: 50.0,
-                      top: 35.0,
-                      child: GestureDetector(
-                        onTap: () {
-                          context.pushNamed('booking-details');
-                        },
-                        child: Hero(
-                          tag: 'search',
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 36.0,
-                              vertical: 8.0,
-                            ),
-                            decoration: BoxDecoration(
-                              color: appWhite,
-                              border: Border.all(
-                                color: appGrey,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(32.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: appGrey.withOpacity(0.5),
-                                  blurRadius: 8.0,
-                                  spreadRadius: 8.0,
-                                  offset: const Offset(0.0, 4.0),
+              ),
+            )
+          : _selectedIndex == 0
+              ? AppBar(
+                  toolbarHeight: 80,
+                  flexibleSpace: Container(
+                    decoration: BoxDecoration(color: appWhite, boxShadow: [
+                      BoxShadow(
+                        color: appBlack.withOpacity(0.1),
+                        blurRadius: 1.0,
+                        spreadRadius: 1.0,
+                        offset: const Offset(0.0, 1.0),
+                      )
+                    ]),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          right: 50.0,
+                          top: 35.0,
+                          child: GestureDetector(
+                            onTap: () {
+                              context.pushNamed('booking-details');
+                            },
+                            child: Hero(
+                              tag: 'search',
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 36.0,
+                                  vertical: 8.0,
                                 ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.search),
-                                const SizedBox(width: 8.0),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Where to?',
-                                      style: textTheme.bodyMedium!.copyWith(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      'City, airport, addresse or hotel',
-                                      style: textTheme.bodyMedium,
+                                decoration: BoxDecoration(
+                                  color: appWhite,
+                                  border: Border.all(
+                                    color: appGrey,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(32.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: appGrey.withOpacity(0.5),
+                                      blurRadius: 8.0,
+                                      spreadRadius: 8.0,
+                                      offset: const Offset(0.0, 4.0),
                                     ),
                                   ],
                                 ),
-                              ],
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.search),
+                                    const SizedBox(width: 8.0),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Where to?',
+                                          style: textTheme.bodyMedium!.copyWith(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          'City, airport, addresse or hotel',
+                                          style: textTheme.bodyMedium,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
-          : null,
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              : null,
       body: pages[_selectedIndex],
     );
   }

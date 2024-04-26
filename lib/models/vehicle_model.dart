@@ -15,7 +15,7 @@ class Vehicle {
   final String? agencyNumber;
 
   Vehicle({
-    this.id, // id is optional
+    this.id,
     required this.make,
     required this.model,
     required this.year,

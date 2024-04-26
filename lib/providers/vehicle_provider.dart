@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lease/Api_endpoint/services.dart';
-import 'package:lease/models/vehicle_model.dart'; // Import your Vehicle model class
+import 'package:lease/models/vehicle_model.dart';
 
 class VehicleProvider extends ChangeNotifier {
   List<Vehicle> _vehicles = []; // List to hold instances of Vehicle
@@ -8,7 +8,6 @@ class VehicleProvider extends ChangeNotifier {
   // Method to get all vehicles
   List<Vehicle> get vehicles => _vehicles;
 
-  // Function to fetch vehicles from the backend
   Future<void> fetchVehicles() async {
     try {
       _vehicles = await ApiService.fetchVehicles();
@@ -17,6 +16,24 @@ class VehicleProvider extends ChangeNotifier {
       // Handle error appropriately
       // print(_vehicles);
       print('Error fetching vehicles: $error');
+    }
+  }
+
+  // fetched vehicle by id
+  late Vehicle _vehicle;
+
+  Vehicle get vehicle => _vehicle;
+
+  Future<void> fetchVehicleById(String? id) async {
+    try {
+      // Fetch vehicle by ID
+      final Vehicle vehicle = await ApiService.fetchVehicleById(id);
+
+      _vehicle = vehicle;
+
+      notifyListeners();
+    } catch (error) {
+      print('Error fetching vehicle by ID: $error');
     }
   }
 

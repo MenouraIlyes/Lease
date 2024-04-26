@@ -14,12 +14,8 @@ class _IntroPage2State extends State<IntroPage2> {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Lottie.network(
-        'https://lottie.host/db850b51-6a91-405a-b1e8-9c762ffd775b/yZGenGPq6R.json',
-        height: 300,
-        width: 300,
-        repeat: false,
-      ),
+      Lottie.asset('assets/Intro2.json',
+          height: 300, width: 300, repeat: false),
       SizedBox(height: 20),
       Text(
         "Seamless booking process",

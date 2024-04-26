@@ -46,7 +46,7 @@ class ConfirmationDialog extends StatelessWidget {
                 ),
               ),
             );
-            context.go('/home'); // Close the dialog
+            context.go('/home');
           },
         ),
       ],

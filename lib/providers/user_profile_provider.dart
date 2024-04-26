@@ -7,7 +7,7 @@ class UserProfileProvider extends ChangeNotifier {
   // access the user profile
   UserProfile? get userProfile => _userProfile;
 
-  // Function to update the user profile
+  //update the user profile
   void updateUserProfile(UserProfile newUserProfile) {
     _userProfile = newUserProfile;
     notifyListeners();

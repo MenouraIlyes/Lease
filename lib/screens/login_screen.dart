@@ -15,19 +15,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late final TextEditingController _username;
+  late final TextEditingController _email;
   late final TextEditingController _password;
 
   @override
   void initState() {
-    _username = TextEditingController();
+    _email = TextEditingController();
     _password = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _username.dispose();
+    _email.dispose();
     _password.dispose();
     super.dispose();
   }
@@ -35,13 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     try {
       final Map<String, dynamic> responseData = await ApiService.login(
-        _username.text,
+        _email.text,
         _password.text,
       );
       final String token = responseData['token'];
 
       //Fetch user profile after successful login
-      final userProfileData = await ApiService.fetchUserProfile(_username.text);
+      final userProfileData = await ApiService.fetchUserProfile(_email.text);
 
       //Store the user profile in the provider
       Provider.of<UserProfileProvider>(context, listen: false)
@@ -141,12 +141,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: TextField(
-                        controller: _username,
+                        controller: _email,
                         enableSuggestions: false,
                         autocorrect: false,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Username',
+                          hintText: 'Email',
                         ),
                       ),
                     ),

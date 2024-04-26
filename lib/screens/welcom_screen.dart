@@ -17,30 +17,30 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   //Controller to keep track of which page we're on
   PageController _controller = PageController();
-  //Keep track of if we are on the last page or not
+
   bool onLastPage = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-      children: [
-        //Page view
-        PageView(
-          controller: _controller,
-          onPageChanged: (index) {
-            setState(() {
-              onLastPage = (index == 2);
-            });
-          },
-          children: [
-            IntroPage1(),
-            IntroPage2(),
-            IntroPage3(),
-          ],
-        ),
+      body: Stack(
+        children: [
+          //Page view
+          PageView(
+            controller: _controller,
+            onPageChanged: (index) {
+              setState(() {
+                onLastPage = (index == 2);
+              });
+            },
+            children: [
+              IntroPage1(),
+              IntroPage2(),
+              IntroPage3(),
+            ],
+          ),
 
-        //Dot indicators
-        Container(
+          //Dot indicators
+          Container(
             alignment: Alignment(0, 0.90),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -100,8 +100,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         ),
                       ),
               ],
-            )),
-      ],
-    ));
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

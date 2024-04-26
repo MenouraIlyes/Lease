@@ -51,26 +51,78 @@ class _RegisterScreenState extends State<RegisterScreen> {
         password.isEmpty ||
         email.isEmpty ||
         phoneNumber.isEmpty) {
-      // Show message to the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please fill in all required fields.'),
           duration: Duration(seconds: 2),
         ),
       );
-      return; // Exit the function if any field is empty
+      return;
+    }
+
+    // Check username length
+    if (username.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Username must be at least 8 characters long.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    // Check if email is valid
+    final emailRegExp = RegExp(
+      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+      caseSensitive: false,
+      multiLine: false,
+    );
+    if (!emailRegExp.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a valid email address.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    // Check password length
+    if (password.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Password must be at least 8 characters long.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    // Check if phone number is valid
+    final phoneRegExp = RegExp(
+      r'^(05|06|07)\d{8}$',
+      caseSensitive: false,
+      multiLine: false,
+    );
+    if (!phoneRegExp.hasMatch(phoneNumber)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter a valid phone number.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      return;
     }
 
     // Check if a role is selected
     if (role.isEmpty) {
-      // Show message to the user
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please select a role.'),
           duration: Duration(seconds: 2),
         ),
       );
-      return; // Exit the function if role is not selected
+      return;
     }
 
     try {
@@ -86,10 +138,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       // Call the registerUser function with the UserProfile object
       await ApiService.registerUser(newUserProfile);
 
-      // Access user profile provider instance
       var userProfileProvider =
           Provider.of<UserProfileProvider>(context, listen: false);
-      // Update user profile provider with registration info
       userProfileProvider.updateUserProfile(newUserProfile);
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -258,31 +308,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       Row(
                         children: [
-                          Radio<String>(
-                            activeColor: appBlue,
-                            value: 'customer',
-                            groupValue: role,
-                            onChanged: (value) {
-                              setState(() {
-                                role = value!;
-                              });
-                            },
+                          Expanded(
+                            child: RadioListTile<String>(
+                              activeColor: appBlue,
+                              value: 'customer',
+                              groupValue: role,
+                              onChanged: (value) {
+                                setState(() {
+                                  role = value!;
+                                });
+                              },
+                              title: Text('Customer',
+                                  style: GoogleFonts.poppins(color: appBlack)),
+                              tileColor: appWhite,
+                              dense: true,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                            ),
                           ),
-                          Text(
-                            'Customer',
-                            style: GoogleFonts.poppins(),
+                          SizedBox(width: 5),
+                          Expanded(
+                            child: RadioListTile<String>(
+                              activeColor: appBlue,
+                              value: 'agency',
+                              groupValue: role,
+                              onChanged: (value) {
+                                setState(() {
+                                  role = value!;
+                                });
+                              },
+                              title: Text('Agency',
+                                  style: GoogleFonts.poppins(color: appBlack)),
+                              tileColor: appWhite,
+                              dense: true,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                            ),
                           ),
-                          Radio<String>(
-                            activeColor: appBlue,
-                            value: 'agency',
-                            groupValue: role,
-                            onChanged: (value) {
-                              setState(() {
-                                role = value!;
-                              });
-                            },
-                          ),
-                          Text('Agency', style: GoogleFonts.poppins()),
                         ],
                       ),
                     ],

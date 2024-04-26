@@ -4,6 +4,7 @@ import 'package:lease/screens/add_vehicle_screen.dart';
 import 'package:lease/screens/booking_details_screen.dart';
 import 'package:lease/screens/home_screen.dart';
 import 'package:lease/screens/login_register_screen.dart';
+import 'package:lease/screens/register_screen.dart';
 import 'package:lease/screens/vehicles_list_screen.dart';
 import 'package:lease/screens/welcom_screen.dart';
 import 'package:lease/shared/colors.dart';

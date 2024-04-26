@@ -16,8 +16,7 @@ class _IntroPage1State extends State<IntroPage1> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Lottie.network(
-            'https://lottie.host/ebd376ae-40fc-4d3e-832b-c2fd808d2bed/9cOk8PqauN.json'),
+        Lottie.asset('assets/Intro1.json'),
         SizedBox(height: 20),
         Text(
           "Welcome to Lease",
