@@ -3,6 +3,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lease/models/booking_steps.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:lease/shared/constants.dart';
+import 'package:lease/providers/reservation_provider.dart';
+import 'package:provider/provider.dart';
 
 class SelectTimeWidget extends StatefulWidget {
   const SelectTimeWidget({super.key, required this.step});
@@ -78,6 +80,10 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                           setState(() {
                             pickupTimeValue.text = picked_s.format(context);
                           });
+
+                          Provider.of<ReservationProvider>(context,
+                                  listen: false)
+                              .setPickupTime(picked_s.format(context));
                         }
                       },
                       controller: pickupTimeValue,
@@ -123,6 +129,10 @@ class _SelectTimeWidgetState extends State<SelectTimeWidget> {
                             setState(() {
                               dropofTimeValue.text = picked_s.format(context);
                             });
+                            // Access ReservationProvider and update drop-off time
+                            Provider.of<ReservationProvider>(context,
+                                    listen: false)
+                                .setDropoffTime(picked_s.format(context));
                           }
                         },
                         controller: dropofTimeValue,

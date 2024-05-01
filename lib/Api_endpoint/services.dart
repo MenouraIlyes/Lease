@@ -241,4 +241,26 @@ class ApiService {
       print('Error creating reservation: $error');
     }
   }
+
+  // Fetch Reservation Api
+  static Future<List<Reservation>> fetchReservations() async {
+    try {
+      String apiUrl = '$mainUrl/reservations';
+      var response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        List<dynamic> responseData = jsonDecode(response.body);
+
+        // Map the JSON data to Reservation objects
+        List<Reservation> reservations =
+            responseData.map((data) => Reservation.fromJson(data)).toList();
+
+        return reservations;
+      } else {
+        throw Exception('Failed to fetch reservations');
+      }
+    } catch (error) {
+      throw Exception('Error fetching reservations: $error');
+    }
+  }
 }

@@ -5,6 +5,7 @@ import 'package:lease/models/reservation_model.dart';
 
 // Create a provider class to hold reservation data
 class ReservationProvider extends ChangeNotifier {
+  late List<Reservation> reservations = [];
   // Fields to hold reservation data
   late DateTime startDate;
   late DateTime endDate;
@@ -15,16 +16,43 @@ class ReservationProvider extends ChangeNotifier {
   late String customerId;
   late String destinationId;
 
-  // Method to set the start date
   void setStartDate(DateTime date) {
     startDate = date;
-    notifyListeners(); // Notify listeners that the data has changed
+    notifyListeners();
+    print(startDate);
   }
 
-  // Method to set the end date
   void setEndDate(DateTime date) {
     endDate = date;
-    notifyListeners(); // Notify listeners that the data has changed
+    notifyListeners();
+    print(endDate);
+  }
+
+  void setPickupTime(String time) {
+    pickupTime = time;
+    notifyListeners();
+    print(pickupTime);
+  }
+
+  void setDropoffTime(String time) {
+    dropoffTime = time;
+    notifyListeners();
+    print(dropoffTime);
+  }
+
+  void setVehicleId(String id) {
+    vehicleId = id;
+    notifyListeners();
+  }
+
+  void setTotalPrice(String price) {
+    totalPrice = price;
+    notifyListeners();
+  }
+
+  void setCustomerId(String id) {
+    customerId = id;
+    notifyListeners();
   }
 
   // Method to create a reservation
@@ -34,7 +62,6 @@ class ReservationProvider extends ChangeNotifier {
       String startDateString = startDate.toIso8601String();
       String endDateString = endDate.toIso8601String();
 
-      // Create a Reservation object with collected data
       Reservation reservation = Reservation(
         startDate: startDateString,
         endDate: endDateString,
@@ -43,20 +70,52 @@ class ReservationProvider extends ChangeNotifier {
         totalPrice: totalPrice,
         vehicleId: vehicleId,
         customerId: customerId,
-        destinationId: destinationId,
       );
 
       // Call ApiService to create the reservation
       await ApiService.createReservation(reservation);
 
-      // Show success message or navigate to another screen
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Reservation created successfully.'),
+        backgroundColor: Colors.green,
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white),
+            SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                'Reservation created successfully !',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        duration: Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: Colors.white,
+          onPressed: () {},
+        ),
       ));
     } catch (error) {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Failed to create reservation: $error'),
+      ));
+    }
+  }
+
+  // Method to fetch reservations
+  Future<void> fetchReservations(BuildContext context) async {
+    try {
+      List<Reservation> fetchedReservations =
+          await ApiService.fetchReservations();
+
+      reservations = fetchedReservations;
+
+      notifyListeners();
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Failed to fetch reservations: $error'),
       ));
     }
   }

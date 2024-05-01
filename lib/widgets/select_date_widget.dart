@@ -20,7 +20,7 @@ class _SelectDateWidgetState extends State<SelectDateWidget> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var expandedHeight = size.height - 250 - 60 - 32 - 16;
+    var expandedHeight = size.height - 350 - 60 - 32 - 16;
     return Card(
       elevation: 0.0,
       clipBehavior: Clip.antiAlias,
@@ -60,30 +60,6 @@ class _SelectDateWidgetState extends State<SelectDateWidget> {
                         Provider.of<ReservationProvider>(context, listen: false)
                             .setEndDate(nonNullEndDate);
                       },
-                    ),
-                    const Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Skip',
-                            style: TextStyle(color: appBlue),
-                          ),
-                        ),
-                        FilledButton(
-                          onPressed: () {},
-                          style: FilledButton.styleFrom(
-                            backgroundColor: appBlue,
-                            minimumSize: const Size(120, 48),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                          ),
-                          child: const Text('Next'),
-                        )
-                      ],
                     ),
                   ],
                 )

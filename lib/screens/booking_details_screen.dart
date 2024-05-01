@@ -18,7 +18,7 @@ class BookingDetailsScreen extends StatefulWidget {
 }
 
 class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
-  var step = BookingStep.selectDate;
+  var step = BookingStep.selectTime;
   @override
   Widget build(BuildContext context) {
     return BackdropFilter(
@@ -41,17 +41,20 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        step = BookingStep.selectDestination;
-                      });
-                    },
-                    child: Hero(
-                      tag: 'search',
-                      child: SelectDestinationWidget(step: step),
-                    ),
-                  ),
+                  // Destination
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     setState(() {
+                  //       step = BookingStep.selectDestination;
+                  //     });
+                  //   },
+                  //   child: Hero(
+                  //     tag: 'search',
+                  //     child: SelectDestinationWidget(step: step),
+                  //   ),
+                  // ),
+
+                  // Date & time
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -60,16 +63,14 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                     },
                     child: SelectDateWidget(step: step),
                   ),
-                  (step == BookingStep.selectDate)
-                      ? const SizedBox()
-                      : GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              step = BookingStep.selectTime;
-                            });
-                          },
-                          child: SelectTimeWidget(step: step),
-                        )
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        step = BookingStep.selectTime;
+                      });
+                    },
+                    child: SelectTimeWidget(step: step),
+                  )
                 ],
               ),
             ),

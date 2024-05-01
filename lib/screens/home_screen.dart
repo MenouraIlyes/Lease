@@ -31,7 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Access the UserProfileProvider
     UserProfile? userProfile =
         Provider.of<UserProfileProvider>(context).userProfile;
 

@@ -10,7 +10,7 @@ import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
 
 class FleetDetailsScreen extends StatefulWidget {
-  final Vehicle selectedVehicle; // Selected vehicle data
+  final Vehicle selectedVehicle;
 
   const FleetDetailsScreen({Key? key, required this.selectedVehicle})
       : super(key: key);
@@ -21,7 +21,7 @@ class FleetDetailsScreen extends StatefulWidget {
 
 class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
   late ScrollController _scrollController; // Scrolling
-  bool isFavorite = false; // Track the state of the button
+  bool isFavorite = false;
 
   @override
   void initState() {
@@ -56,9 +56,9 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
               // Display photos of the selected vehicle
               for (String photoUrl in selectedVehicle.photos)
                 Image.file(
-                  File(photoUrl), // Provide the correct file path here
-                  width: 400, // Adjust width as needed
-                  height: 400, // Adjust height as needed
+                  File(photoUrl),
+                  width: 400,
+                  height: 400,
                   fit: BoxFit.cover,
                 ),
               Positioned(

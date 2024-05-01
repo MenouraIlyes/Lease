@@ -2,14 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lease/models/user_profile_model.dart';
 import 'package:lease/models/vehicle_model.dart';
+import 'package:lease/providers/reservation_provider.dart';
+import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
 
 class VehicleDetailsScreen extends StatefulWidget {
-  final Vehicle selectedVehicle; // Selected vehicle data
+  final Vehicle selectedVehicle;
 
   const VehicleDetailsScreen({Key? key, required this.selectedVehicle})
       : super(key: key);
@@ -20,7 +24,9 @@ class VehicleDetailsScreen extends StatefulWidget {
 
 class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
   late ScrollController _scrollController; // Scrolling
-  bool isFavorite = false; // Track the state of the button
+  bool isFavorite = false;
+  final controller = PageController();
+  var currentPage = 0;
 
   @override
   void initState() {
@@ -43,6 +49,9 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     Vehicle selectedVehicle = widget.selectedVehicle;
+
+    UserProfile? userProfile =
+        Provider.of<UserProfileProvider>(context).userProfile;
 
     var favouritesProvider = context.read<VehicleProvider>();
 
@@ -72,7 +81,6 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
               TextButton(
                 onPressed: () {
                   setState(() {
-                    // Toggle the state of the button
                     isFavorite = !isFavorite;
                   });
                 },
@@ -83,7 +91,32 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                 ),
               ),
               FilledButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  String? selectedVehicleId = selectedVehicle.id;
+
+                  // Set the Id
+                  context
+                      .read<ReservationProvider>()
+                      .setVehicleId(selectedVehicleId!);
+
+                  // Calculate total price
+                  double totalPrice = calculateTotalPrice(context);
+
+                  // Pass total price to reservation provider
+                  context
+                      .read<ReservationProvider>()
+                      .setTotalPrice(totalPrice.toString());
+
+                  // Pass customer Id
+                  String? id = userProfile!.id;
+                  context.read<ReservationProvider>().setCustomerId(id!);
+
+                  context
+                      .read<ReservationProvider>()
+                      .createReservation(context);
+
+                  context.go('/home');
+                },
                 style: FilledButton.styleFrom(
                     backgroundColor: appBlue,
                     minimumSize: const Size(100, 56.0),
@@ -104,7 +137,7 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
           height: double.maxFinite,
           child: Stack(
             children: [
-              // Display photos of the selected vehicle
+              // Display pics
               for (String photoUrl in selectedVehicle.photos)
                 Image.file(
                   File(photoUrl), // Provide the correct file path here
@@ -361,5 +394,25 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
         ),
       ),
     );
+  }
+
+  double calculateTotalPrice(BuildContext context) {
+    ReservationProvider reservationProvider =
+        Provider.of<ReservationProvider>(context, listen: false);
+
+    DateTime pickUpTime = reservationProvider.startDate;
+    DateTime dropOffTime = reservationProvider.endDate;
+
+    int totalDays = dropOffTime.difference(pickUpTime).inDays + 1;
+
+    Vehicle selectedVehicle = widget.selectedVehicle;
+
+    double basePrice = double.parse(selectedVehicle.basePrice);
+
+    double totalPrice = basePrice * totalDays;
+
+    print(totalPrice);
+
+    return totalPrice;
   }
 }

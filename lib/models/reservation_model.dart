@@ -6,7 +6,6 @@ class Reservation {
   final String totalPrice;
   final String vehicleId;
   final String customerId;
-  final String destinationId;
 
   Reservation({
     required this.startDate,
@@ -16,7 +15,6 @@ class Reservation {
     required this.totalPrice,
     required this.vehicleId,
     required this.customerId,
-    required this.destinationId,
   });
 
   factory Reservation.fromJson(Map<String, dynamic> json) {
@@ -28,7 +26,6 @@ class Reservation {
       totalPrice: json['total_price'] as String,
       vehicleId: json['vehicle'] as String,
       customerId: json['customer'] as String,
-      destinationId: json['destination'] as String,
     );
   }
 
@@ -41,7 +38,6 @@ class Reservation {
       'total_price': totalPrice,
       'vehicle': vehicleId,
       'customer': customerId,
-      'destination': destinationId,
     };
   }
 }

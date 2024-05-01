@@ -112,7 +112,7 @@ class _FleetWidgetState extends State<FleetWidget> {
                   .where((vehicle) => vehicle.agencyName == agencyUsername)
                   .toList();
 
-              // Show a loading indicator while fetching data
+              // loading indicator
               if (agencyVehicles.isEmpty) {
                 return Center(
                   child: CustomLoadingIndicator(
