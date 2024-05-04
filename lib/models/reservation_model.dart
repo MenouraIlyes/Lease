@@ -1,4 +1,5 @@
 class Reservation {
+  final String? id;
   final String startDate;
   final String endDate;
   final String pickupTime;
@@ -8,6 +9,7 @@ class Reservation {
   final String customerId;
 
   Reservation({
+    this.id,
     required this.startDate,
     required this.endDate,
     required this.pickupTime,
@@ -19,6 +21,7 @@ class Reservation {
 
   factory Reservation.fromJson(Map<String, dynamic> json) {
     return Reservation(
+      id: json['_id'],
       startDate: json['start_date'] as String,
       endDate: json['end_date'] as String,
       pickupTime: json['pickup_time'] as String,
@@ -31,6 +34,7 @@ class Reservation {
 
   Map<String, dynamic> toJson() {
     return {
+      if (id != null) 'id': id,
       'start_date': startDate,
       'end_date': endDate,
       'pickup_time': pickupTime,

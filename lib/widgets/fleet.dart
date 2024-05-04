@@ -6,10 +6,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/Api_endpoint/services.dart';
 import 'package:lease/models/vehicle_model.dart';
+import 'package:lease/providers/reservation_provider.dart';
 import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/screens/add_vehicle_screen.dart';
-import 'package:lease/screens/vehicle_detail_screen.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:lease/shared/confirmation_dialogue.dart';
 import 'package:lease/widgets/fleet_details_screen.dart';
@@ -267,8 +267,24 @@ class _PropertyCardState extends State<PropertyCard> {
                         context: context,
                         builder: (context) {
                           return ConfirmationDialog(
-                            onConfirm: () =>
-                                ApiService.deleteVehicle(widget.property.id),
+                            onConfirm: () async {
+                              try {
+                                // Call the delete vehicle API endpoint
+                                await ApiService.deleteVehicle(
+                                    widget.property.id);
+
+                                // Call the method to delete reservation if vehicle is deleted
+                                // await Provider.of<ReservationProvider>(context,
+                                //         listen: false)
+                                //     .deleteReservation(widget.property.id!);
+                              } catch (error) {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content:
+                                      Text('Failed to delete vehicle: $error'),
+                                ));
+                              }
+                            },
                           );
                         },
                       );

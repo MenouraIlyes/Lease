@@ -115,6 +115,28 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                       .read<ReservationProvider>()
                       .createReservation(context);
 
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.green,
+                    content: Row(
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.white),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            'Reservation created successfully !',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    duration: Duration(seconds: 3),
+                    action: SnackBarAction(
+                      label: 'OK',
+                      textColor: Colors.white,
+                      onPressed: () {},
+                    ),
+                  ));
+
                   context.go('/home');
                 },
                 style: FilledButton.styleFrom(

@@ -13,7 +13,6 @@ class VehicleProvider extends ChangeNotifier {
       _vehicles = await ApiService.fetchVehicles();
       notifyListeners();
     } catch (error) {
-      // Handle error appropriately
       // print(_vehicles);
       print('Error fetching vehicles: $error');
     }

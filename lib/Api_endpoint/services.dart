@@ -263,4 +263,22 @@ class ApiService {
       throw Exception('Error fetching reservations: $error');
     }
   }
+
+  // Delete Reservation API
+  static Future<void> deleteReservation(String reservationId) async {
+    try {
+      String apiUrl = '$mainUrl/reservations/$reservationId';
+      var response = await http.delete(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        print('Reservation deleted successfully');
+      } else if (response.statusCode == 404) {
+        throw Exception('Reservation not found');
+      } else {
+        throw Exception('Failed to delete reservation: ${response.statusCode}');
+      }
+    } catch (error) {
+      throw Exception('Error deleting reservation: $error');
+    }
+  }
 }

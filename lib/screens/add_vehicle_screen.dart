@@ -1,15 +1,16 @@
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lease/Api_endpoint/services.dart';
-import 'package:lease/models/user_profile_model.dart';
 import 'package:lease/models/vehicle_model.dart';
 import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class AddVehicleScreen extends StatefulWidget {
@@ -38,7 +39,7 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
       imageQuality: 70,
       maxWidth: 800,
     );
-    if (pickedImages != false) {
+    if (pickedImages != null) {
       setState(() {
         _selectedImages =
             pickedImages.map((image) => File(image.path)).toList();
@@ -85,12 +86,10 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     }
 
     try {
-      // Access user provider to get agency information
       final userProvider = context.read<UserProfileProvider>();
       final agencyName = userProvider.userProfile?.username;
       final agencyNumber = userProvider.userProfile?.phoneNumber;
 
-      // Create a Vehicle object with user input
       final Vehicle vehicle = Vehicle(
         make: makeController.text,
         model: modelController.text,
@@ -446,21 +445,19 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
                       crossAxisSpacing: 4.0,
                       mainAxisSpacing: 4.0,
                     ),
-                    shrinkWrap: true, // Add this line
+                    shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: _selectedImages.length,
                     itemBuilder: (context, index) {
                       return Container(
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(8.0), // Rounded corners
+                          borderRadius: BorderRadius.circular(8.0),
                           boxShadow: [
                             BoxShadow(
-                              color:
-                                  Colors.grey.withOpacity(0.5), // Shadow color
+                              color: Colors.grey.withOpacity(0.5),
                               spreadRadius: 2,
                               blurRadius: 5,
-                              offset: Offset(0, 3), // Shadow position
+                              offset: Offset(0, 3),
                             ),
                           ],
                         ),

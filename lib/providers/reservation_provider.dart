@@ -14,7 +14,6 @@ class ReservationProvider extends ChangeNotifier {
   late String totalPrice;
   late String vehicleId;
   late String customerId;
-  late String destinationId;
 
   void setStartDate(DateTime date) {
     startDate = date;
@@ -74,28 +73,6 @@ class ReservationProvider extends ChangeNotifier {
 
       // Call ApiService to create the reservation
       await ApiService.createReservation(reservation);
-
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.green,
-        content: Row(
-          children: [
-            Icon(Icons.check_circle, color: Colors.white),
-            SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                'Reservation created successfully !',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        duration: Duration(seconds: 3),
-        action: SnackBarAction(
-          label: 'OK',
-          textColor: Colors.white,
-          onPressed: () {},
-        ),
-      ));
     } catch (error) {
       // Show error message
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -119,4 +96,20 @@ class ReservationProvider extends ChangeNotifier {
       ));
     }
   }
+
+  // Method to delete a reservation
+  // Future<void> deleteReservation(String vehicleId) async {
+  //   try {
+  //     List<Reservation> reservations = await ApiService.fetchReservations();
+
+  //     for (Reservation reservation in reservations) {
+  //       if (reservation.vehicleId == vehicleId) {
+  //         await ApiService.deleteReservation(reservation.id!);
+  //         await ApiService.fetchReservations();
+  //       }
+  //     }
+  //   } catch (error) {
+  //     throw Exception('Error deleting reservation: $error');
+  //   }
+  // }
 }

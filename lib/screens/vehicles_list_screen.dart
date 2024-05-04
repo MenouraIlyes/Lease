@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lease/models/reservation_model.dart';
 import 'package:lease/models/vehicle_model.dart';
+import 'package:lease/providers/reservation_provider.dart';
 import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/screens/vehicle_detail_screen.dart';
 import 'package:lease/shared/colors.dart';
@@ -64,8 +66,10 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch vehicles when the screen initializes
+    // Fetch vehicles & reservations when the screen initializes
     Provider.of<VehicleProvider>(context, listen: false).fetchVehicles();
+    Provider.of<ReservationProvider>(context, listen: false)
+        .fetchReservations(context);
   }
 
   @override
@@ -98,8 +102,22 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
           // Access the list of vehicles
           List<Vehicle> vehicles = vehicleProvider.vehicles;
 
+          // Access the list of reservations
+          List<Reservation> reservations =
+              Provider.of<ReservationProvider>(context).reservations;
+
+          // Filter out reserved vehicles
+          List<Vehicle> availableVehicles = vehicles.where((vehicle) {
+            // Check if this vehicle's id exists in reservations ( That means that the vehicle is already reserved ).
+            final exist = reservations
+                .any((reservation) => reservation.vehicleId == vehicle.id);
+
+            // We return the vehicles that are not reserved.
+            return !exist;
+          }).toList();
+
           // Show a loading indicator while fetching data
-          if (vehicles.isEmpty) {
+          if (availableVehicles.isEmpty) {
             return Center(
               child: CustomLoadingIndicator(message: 'No vehicles available'),
             );
@@ -108,9 +126,9 @@ class _VehicleListScreenState extends State<VehicleListScreen> {
           return Padding(
             padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
             child: ListView.builder(
-              itemCount: vehicles.length,
+              itemCount: availableVehicles.length,
               itemBuilder: (context, index) {
-                final car = vehicles[index];
+                final car = availableVehicles[index];
                 return PropertyCard(property: car);
               },
             ),
