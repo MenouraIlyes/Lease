@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lease/screens/billing_screen.dart';
 import 'package:lease/screens/booking_details_screen.dart';
 import 'package:lease/screens/home_screen.dart';
 import 'package:lease/screens/login_register_screen.dart';
 import 'package:lease/screens/vehicles_list_screen.dart';
 import 'package:lease/screens/welcom_screen.dart';
 import 'package:lease/shared/colors.dart';
+import 'package:lease/widgets/customer_trips.dart';
 
 class AppRouter {
   late final GoRouter router = GoRouter(

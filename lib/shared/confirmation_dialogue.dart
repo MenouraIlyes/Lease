@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final Future<void> Function() onConfirm;
@@ -46,7 +45,6 @@ class ConfirmationDialog extends StatelessWidget {
                 ),
               ),
             );
-            context.go('/home');
           },
         ),
       ],

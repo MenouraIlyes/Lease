@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/models/reservation_model.dart';
-import 'package:lease/models/vehicle_model.dart';
 import 'package:lease/providers/reservation_provider.dart';
 import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/providers/vehicle_provider.dart';
+import 'package:lease/screens/billing_screen.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -53,14 +53,14 @@ class CustomLoadingIndicator extends StatelessWidget {
   }
 }
 
-class AgencyCarTrips extends StatefulWidget {
-  const AgencyCarTrips({super.key});
+class CustomerCarTrips extends StatefulWidget {
+  const CustomerCarTrips({super.key});
 
   @override
-  State<AgencyCarTrips> createState() => _AgencyCarTrips();
+  State<CustomerCarTrips> createState() => _CustomerCarTrips();
 }
 
-class _AgencyCarTrips extends State<AgencyCarTrips> {
+class _CustomerCarTrips extends State<CustomerCarTrips> {
   @override
   void initState() {
     super.initState();
@@ -96,27 +96,22 @@ class _AgencyCarTrips extends State<AgencyCarTrips> {
       body: Consumer<UserProfileProvider>(
         builder: (context, userProfileProvider, _) {
           // Access the agency username from the user profile
-          final agencyUsername = userProfileProvider.userProfile!.username;
+          final customerId = userProfileProvider.userProfile!.id;
 
           return Consumer<ReservationProvider>(
             builder: (context, ReservationProvider, _) {
               // Access the list of reservations
               List<Reservation> reservations = ReservationProvider.reservations;
 
-              List<Reservation> filteredReservations =
-                  reservations.where((reservation) {
-                String vehicleId = reservation.vehicleId;
-                String extractedAgencyName =
-                    extractAgencyNameFromVehicleId(vehicleId, context);
-
-                return extractedAgencyName == agencyUsername;
-              }).toList();
+              List<Reservation> filteredReservations = reservations
+                  .where((reservation) => reservation.customerId == customerId)
+                  .toList();
 
               // loading indicator
               if (filteredReservations.isEmpty) {
                 return Center(
                   child: CustomLoadingIndicator(
-                      message: 'No Trips available for your agency'),
+                      message: 'No Trips available for you'),
                 );
               }
 
@@ -137,16 +132,6 @@ class _AgencyCarTrips extends State<AgencyCarTrips> {
       ),
     );
   }
-
-  String extractAgencyNameFromVehicleId(
-      String vehicleId, BuildContext context) {
-    // Find the vehicle model with the given vehicle ID
-    Vehicle? vehicle = Provider.of<VehicleProvider>(context, listen: false)
-        .vehicles
-        .firstWhere((vehicle) => vehicle.id == vehicleId);
-
-    return vehicle.agencyName ?? '';
-  }
 }
 
 class ReservationCard extends StatelessWidget {
@@ -157,67 +142,76 @@ class ReservationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      color: appWhite,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      shadowColor: appBlue,
-      elevation: 10,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [appWhite, appWhite],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BillingScreen(reservation: reservation)),
+        );
+      },
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        color: appWhite,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
         ),
-        child: ListTile(
-          title: Text(
-            'Reservation ID: ${reservation.id}',
-            style: GoogleFonts.poppins(
-                color: appBlue, fontWeight: FontWeight.bold),
+        shadowColor: appBlue,
+        elevation: 10,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [appWhite, appWhite],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
           ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 10),
-              Text(
-                'Start Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(reservation.startDate))}',
-                style: GoogleFonts.poppins(color: appBlack),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'End Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(reservation.endDate))}',
-                style: GoogleFonts.poppins(color: appBlack),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Pickup Time: ${reservation.pickupTime}',
-                style: GoogleFonts.poppins(color: appBlack),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Dropoff Time: ${reservation.dropoffTime}',
-                style: GoogleFonts.poppins(color: appBlack),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Total Price: ${reservation.totalPrice} DA',
-                style: GoogleFonts.poppins(color: appBlack),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Vehicle ID: ${reservation.vehicleId}',
-                style: GoogleFonts.poppins(color: appBlack),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Client ID: ${reservation.customerId}',
-                style: GoogleFonts.poppins(color: appBlack),
-              ),
-            ],
+          child: ListTile(
+            title: Text(
+              'Reservation ID: ${reservation.id}',
+              style: GoogleFonts.poppins(
+                  color: appBlue, fontWeight: FontWeight.bold),
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 10),
+                Text(
+                  'Start Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(reservation.startDate))}',
+                  style: GoogleFonts.poppins(color: appBlack),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'End Date: ${DateFormat('dd/MM/yyyy').format(DateTime.parse(reservation.endDate))}',
+                  style: GoogleFonts.poppins(color: appBlack),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Pickup Time: ${reservation.pickupTime}',
+                  style: GoogleFonts.poppins(color: appBlack),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Dropoff Time: ${reservation.dropoffTime}',
+                  style: GoogleFonts.poppins(color: appBlack),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Total Price: ${reservation.totalPrice} DA',
+                  style: GoogleFonts.poppins(color: appBlack),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Vehicle ID: ${reservation.vehicleId}',
+                  style: GoogleFonts.poppins(color: appBlack),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Client ID: ${reservation.customerId}',
+                  style: GoogleFonts.poppins(color: appBlack),
+                ),
+              ],
+            ),
           ),
         ),
       ),

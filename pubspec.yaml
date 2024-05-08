@@ -105,6 +105,8 @@ flutter:
     - assets/Intro1.json
     - assets/Intro2.json
     - assets/Intro3.json
+    - assets/Cib.png
+    - assets/edahabia.png
 
 permissions:
     - storage

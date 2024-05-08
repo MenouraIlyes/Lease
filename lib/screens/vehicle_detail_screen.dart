@@ -11,6 +11,7 @@ import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class VehicleDetailsScreen extends StatefulWidget {
   final Vehicle selectedVehicle;
@@ -38,6 +39,9 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
         _scrollController.jumpTo(400.0);
       }
     });
+
+    Provider.of<ReservationProvider>(context, listen: false)
+        .fetchReservations(context);
   }
 
   @override
@@ -53,10 +57,13 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
     UserProfile? userProfile =
         Provider.of<UserProfileProvider>(context).userProfile;
 
-    var favouritesProvider = context.read<VehicleProvider>();
-
-    // accessing favourites list
-    var favourite = favouritesProvider.favourites;
+    // Fetching pickup and drop-off times from ReservationProvider
+    ReservationProvider reservationProvider =
+        Provider.of<ReservationProvider>(context);
+    DateTime pickUpDate = reservationProvider.startDate;
+    DateTime dropOffDate = reservationProvider.endDate;
+    String pickUpTime = reservationProvider.pickupTime;
+    String dropOffTime = reservationProvider.dropoffTime;
 
     return Scaffold(
       bottomNavigationBar: Container(
@@ -83,15 +90,24 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                   setState(() {
                     isFavorite = !isFavorite;
                   });
+
+                  var favouritesProvider =
+                      Provider.of<VehicleProvider>(context, listen: false);
+
+                  if (isFavorite) {
+                    favouritesProvider.addFavourite(selectedVehicle);
+                  } else {
+                    favouritesProvider.removeFavourite(selectedVehicle);
+                  }
                 },
                 child: Icon(
                   isFavorite ? Icons.favorite : Icons.favorite_border,
-                  color: favourite.contains(selectedVehicle) ? appRed : null,
+                  color: isFavorite ? appRed : null,
                   size: 30,
                 ),
               ),
               FilledButton.icon(
-                onPressed: () {
+                onPressed: () async {
                   String? selectedVehicleId = selectedVehicle.id;
 
                   // Set the Id
@@ -160,20 +176,18 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
           child: Stack(
             children: [
               // Display pics
-              for (String photoUrl in selectedVehicle.photos)
-                Image.file(
-                  File(photoUrl), // Provide the correct file path here
-                  width: 400, // Adjust width as needed
-                  height: 400, // Adjust height as needed
-                  fit: BoxFit.cover,
-                ),
+
+              Image.file(
+                File(selectedVehicle.photos.first),
+                width: 400,
+                height: 400,
+                fit: BoxFit.cover,
+              ),
               Positioned(
                 top: 320,
                 child: Container(
-                  //padding for the text and the whole container
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
                   width: MediaQuery.of(context).size.width,
-                  //Size of the container
                   height: 900,
                   decoration: BoxDecoration(
                     color: appWhite,
@@ -355,14 +369,16 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
                                 "Pick-up",
                                 style: GoogleFonts.poppins(color: appBlue),
                               ),
-                              subtitle: Text("10/02/2024 - 10:00 pm"),
+                              subtitle: Text(
+                                  "${DateFormat('dd/MM/yyyy').format(pickUpDate)} - ${pickUpTime}"),
                             ),
                             ListTile(
                               title: Text(
                                 "Drop-off",
                                 style: GoogleFonts.poppins(color: appBlue),
                               ),
-                              subtitle: Text("15/02/2024 - 04:00 pm"),
+                              subtitle: Text(
+                                  "${DateFormat('dd/MM/yyyy').format(dropOffDate)} - ${dropOffTime}"),
                             ),
                           ],
                         ),

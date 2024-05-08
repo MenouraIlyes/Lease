@@ -54,6 +54,16 @@ class ReservationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setCustomerUsername(String username) {
+    username = username;
+    notifyListeners();
+  }
+
+  void setCustomerPhoneNumber(String phoneNumber) {
+    phoneNumber = phoneNumber;
+    notifyListeners();
+  }
+
   // Method to create a reservation
   Future<void> createReservation(BuildContext context) async {
     try {

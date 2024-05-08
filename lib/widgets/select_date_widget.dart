@@ -3,7 +3,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:lease/models/booking_steps.dart';
 import 'package:lease/providers/reservation_provider.dart';
-import 'package:lease/shared/colors.dart';
 import 'package:lease/widgets/app_calendar.dart';
 import 'package:provider/provider.dart';
 

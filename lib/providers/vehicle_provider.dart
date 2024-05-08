@@ -48,7 +48,7 @@ class VehicleProvider extends ChangeNotifier {
   }
 
   // Method to remove a vehicle from favourites
-  void removeFavourit(Vehicle vehicle) {
+  void removeFavourite(Vehicle vehicle) {
     _favourites.remove(vehicle);
     notifyListeners();
   }

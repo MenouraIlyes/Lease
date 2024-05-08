@@ -58,11 +58,32 @@ class ApiService {
     }
   }
 
-  // Fetch user profile by username
+  // Fetch user profile by email
   static Future<UserProfile> fetchUserProfile(String email) async {
     try {
       final http.Response response = await http.get(
-        Uri.parse('$mainUrl/profile/$email'),
+        Uri.parse('$mainUrl/profile/email/$email'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> userData = json.decode(response.body);
+        return UserProfile.fromJson(userData);
+      } else {
+        throw Exception('Failed to fetch UserProfile');
+      }
+    } catch (error) {
+      throw Exception('Failed to fetch UserProfile: $error');
+    }
+  }
+
+  // Fetch user profile by ID
+  static Future<UserProfile> fetchUserProfileById(String id) async {
+    try {
+      final http.Response response = await http.get(
+        Uri.parse('$mainUrl/profile/id/$id'),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },

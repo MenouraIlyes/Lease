@@ -92,9 +92,9 @@ class LoginOrRegisterScreen extends StatelessWidget {
                       child: Text(
                         "Sign up",
                         style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                        ),
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            color: appWhite),
                       ),
                     ),
                   ),

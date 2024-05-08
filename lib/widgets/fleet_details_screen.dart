@@ -2,12 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lease/Api_endpoint/services.dart';
 import 'package:lease/models/vehicle_model.dart';
-import 'package:lease/providers/vehicle_provider.dart';
 import 'package:lease/screens/update_vehicle.dart';
 import 'package:lease/shared/colors.dart';
-import 'package:provider/provider.dart';
+import 'package:lease/shared/confirmation_dialogue.dart';
 
 class FleetDetailsScreen extends StatefulWidget {
   final Vehicle selectedVehicle;
@@ -29,8 +30,8 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
     _scrollController = ScrollController(initialScrollOffset: 0.0);
     _scrollController.addListener(() {
       // Add logic to stop scrolling after a certain point
-      if (_scrollController.offset > 60.0) {
-        _scrollController.jumpTo(60.0);
+      if (_scrollController.offset > 150.0) {
+        _scrollController.jumpTo(150.0);
       }
     });
   }
@@ -54,13 +55,12 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
           child: Stack(
             children: [
               // Display photos of the selected vehicle
-              for (String photoUrl in selectedVehicle.photos)
-                Image.file(
-                  File(photoUrl),
-                  width: 400,
-                  height: 400,
-                  fit: BoxFit.cover,
-                ),
+              Image.file(
+                File(selectedVehicle.photos.first),
+                width: 400,
+                height: 400,
+                fit: BoxFit.cover,
+              ),
               Positioned(
                 top: 320,
                 child: Container(
@@ -232,6 +232,7 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
                       ),
                       SizedBox(height: 40),
 
+                      // Modify vehicle button
                       Padding(
                         padding: const EdgeInsets.only(left: 40, top: 20),
                         child: FilledButton.icon(
@@ -251,7 +252,52 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
                           label: const Text('Change Vehicle Informations'),
                           icon: const Icon(FontAwesomeIcons.penToSquare),
                         ),
-                      )
+                      ),
+
+                      // Delete vehicle button
+                      Padding(
+                        padding: const EdgeInsets.only(left: 40, top: 20),
+                        child: FilledButton.icon(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ConfirmationDialog(
+                                    onConfirm: () async {
+                                      try {
+                                        // Call the delete vehicle API endpoint
+                                        await ApiService.deleteVehicle(
+                                            selectedVehicle.id);
+
+                                        // Call the method to delete reservation if vehicle is deleted
+                                        // await Provider.of<ReservationProvider>(context,
+                                        //         listen: false)
+                                        //     .deleteReservation(widget.property.id!);
+
+                                        context.go('/home');
+                                      } catch (error) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                          content: Text(
+                                              'Failed to delete vehicle: $error'),
+                                        ));
+                                      }
+                                    },
+                                  );
+                                });
+                          },
+                          style: FilledButton.styleFrom(
+                              backgroundColor: appRed,
+                              minimumSize: const Size(100, 56.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              )),
+                          label: const Text(
+                              '              Delete Vehicle             '),
+                          icon: const Icon(FontAwesomeIcons.trash,
+                              color: appWhite),
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -7,7 +7,6 @@ import 'package:lease/models/booking_steps.dart';
 import 'package:lease/screens/vehicles_list_screen.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:lease/widgets/select_date_widget.dart';
-import 'package:lease/widgets/select_destination_widget.dart';
 import 'package:lease/widgets/select_time_widget.dart';
 
 class BookingDetailsScreen extends StatefulWidget {

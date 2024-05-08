@@ -6,6 +6,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:lease/models/user_profile_model.dart';
 import 'package:lease/providers/user_profile_provider.dart';
 import 'package:lease/widgets/agency_trips.dart';
+import 'package:lease/widgets/customer_trips.dart';
 import 'package:lease/widgets/fleet.dart';
 import 'package:lease/widgets/front_home_page.dart';
 import 'package:lease/widgets/liked_cars.dart';
@@ -40,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<Widget> pages = [
       FrontHomeScreen(),
       if (isAgency) FleetWidget() else LikesCars(),
-      CarTrips(),
+      if (isAgency) AgencyCarTrips() else CustomerCarTrips(),
       MoreWidget(),
     ];
 
