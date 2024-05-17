@@ -5,10 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lease/Api_endpoint/services.dart';
+import 'package:lease/models/reservation_model.dart';
 import 'package:lease/models/vehicle_model.dart';
+import 'package:lease/providers/reservation_provider.dart';
 import 'package:lease/screens/update_vehicle.dart';
 import 'package:lease/shared/colors.dart';
 import 'package:lease/shared/confirmation_dialogue.dart';
+import 'package:provider/provider.dart';
 
 class FleetDetailsScreen extends StatefulWidget {
   final Vehicle selectedVehicle;
@@ -27,6 +30,8 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<ReservationProvider>(context, listen: false)
+        .fetchReservations(context);
     _scrollController = ScrollController(initialScrollOffset: 0.0);
     _scrollController.addListener(() {
       // Add logic to stop scrolling after a certain point
@@ -55,8 +60,8 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
           child: Stack(
             children: [
               // Display photos of the selected vehicle
-              Image.file(
-                File(selectedVehicle.photos.first),
+              Image.network(
+                selectedVehicle.photos.first,
                 width: 400,
                 height: 400,
                 fit: BoxFit.cover,
@@ -240,7 +245,8 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UpdateVehicleScreen()),
+                                  builder: (context) => UpdateVehicleScreen(
+                                      vehicle: selectedVehicle)),
                             );
                           },
                           style: FilledButton.styleFrom(
@@ -265,14 +271,28 @@ class _FleetDetailsScreenState extends State<FleetDetailsScreen> {
                                   return ConfirmationDialog(
                                     onConfirm: () async {
                                       try {
-                                        // Call the delete vehicle API endpoint
                                         await ApiService.deleteVehicle(
                                             selectedVehicle.id);
 
-                                        // Call the method to delete reservation if vehicle is deleted
-                                        // await Provider.of<ReservationProvider>(context,
-                                        //         listen: false)
-                                        //     .deleteReservation(widget.property.id!);
+                                        List<Reservation> reservations =
+                                            Provider.of<ReservationProvider>(
+                                                    context,
+                                                    listen: false)
+                                                .reservations;
+
+                                        Reservation? matchingReservation;
+                                        for (var reservation in reservations) {
+                                          if (reservation.vehicleId ==
+                                              selectedVehicle.id) {
+                                            matchingReservation = reservation;
+                                            break;
+                                          }
+                                        }
+
+                                        if (matchingReservation != null) {
+                                          await ApiService.deleteReservation(
+                                              matchingReservation.id);
+                                        }
 
                                         context.go('/home');
                                       } catch (error) {

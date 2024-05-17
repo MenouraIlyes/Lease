@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,7 +12,8 @@ import 'package:lease/shared/colors.dart';
 import 'package:provider/provider.dart';
 
 class UpdateVehicleScreen extends StatefulWidget {
-  const UpdateVehicleScreen({super.key});
+  final Vehicle vehicle;
+  const UpdateVehicleScreen({super.key, required this.vehicle});
 
   @override
   State<UpdateVehicleScreen> createState() => _UpdateVehicleScreenState();
@@ -19,6 +21,8 @@ class UpdateVehicleScreen extends StatefulWidget {
 
 class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
   List<File> _selectedImages = [];
+  List<String> _cloudinaryImages = [];
+
   final TextEditingController makeController = TextEditingController();
   final TextEditingController modelController = TextEditingController();
   final TextEditingController yearController = TextEditingController();
@@ -37,12 +41,33 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
     _fetchVehicle();
   }
 
+  // Upload images to cloudinary
+  Future<List<String>> uploadImages(List<String> imagePaths) async {
+    const cloudName = 'dhqgycty6';
+    const uploadPreset = 'k8rbqd6s';
+    final List<String> uploadedUrls = [];
+
+    final cloudinary = CloudinaryPublic(cloudName, uploadPreset);
+
+    for (final imagePath in imagePaths) {
+      final file = File(imagePath);
+      try {
+        final CloudinaryResponse uploadResponse = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(file.path,
+              resourceType: CloudinaryResourceType.Image),
+        );
+        uploadedUrls.add(uploadResponse.secureUrl);
+      } catch (error) {
+        print('Error uploading image: $imagePath - $error');
+      }
+    }
+
+    return uploadedUrls;
+  }
+
   Future<void> _fetchVehicle() async {
     try {
-      // Fetch vehicle information from the provider
-      final vehicleProvider = context.read<VehicleProvider>();
-
-      final vehicle = vehicleProvider.vehicle;
+      final vehicle = widget.vehicle;
 
       // Populate text fields with fetched vehicle data
       if (vehicle != null) {
@@ -57,9 +82,7 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
           gasTypeController.text = vehicle.gasType;
           descriptionController.text = vehicle.description;
           basePriceController.text = vehicle.basePrice;
-          if (vehicle.photos.isNotEmpty) {
-            _selectedImages = vehicle.photos.map((path) => File(path)).toList();
-          }
+          _cloudinaryImages = vehicle.photos;
         });
       }
     } catch (error) {
@@ -92,7 +115,7 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
         gasTypeController.text.isEmpty ||
         descriptionController.text.isEmpty ||
         basePriceController.text.isEmpty ||
-        _selectedImages.isEmpty) {
+        (_selectedImages.isEmpty && _cloudinaryImages.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red,
@@ -120,6 +143,15 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
     }
 
     try {
+      List<String> uploadedUrls = [];
+      if (_selectedImages.isNotEmpty) {
+        uploadedUrls = await uploadImages(
+            _selectedImages.map((file) => file.path).toList());
+      }
+      // Check if all images were uploaded successfully
+      if (uploadedUrls.length != _selectedImages.length) {
+        throw Exception('Failed to upload all images.');
+      }
       final Vehicle updatedVehicle = Vehicle(
         make: makeController.text,
         model: modelController.text,
@@ -131,10 +163,14 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
         gasType: gasTypeController.text,
         description: descriptionController.text,
         basePrice: basePriceController.text,
-        photos: _selectedImages.map((file) => file.path).toList(),
+        photos: uploadedUrls.isNotEmpty ? uploadedUrls : _cloudinaryImages,
       );
 
-      await ApiService.updateVehicle(updatedVehicle.id, updatedVehicle);
+      await ApiService.updateVehicle(widget.vehicle.id, updatedVehicle);
+      // Close the loading indicator
+      Navigator.of(context).pop();
+
+      context.go('/home');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -159,8 +195,6 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
           ),
         ),
       );
-
-      context.go('/home');
     } catch (error) {
       print('Error updating: $error');
     }
@@ -466,7 +500,7 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                if (_selectedImages.isNotEmpty)
+                if (_selectedImages.isNotEmpty || _cloudinaryImages.isNotEmpty)
                   GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
@@ -475,28 +509,55 @@ class _UpdateVehicleScreenState extends State<UpdateVehicleScreen> {
                     ),
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: _selectedImages.length,
+                    itemCount:
+                        _selectedImages.length + _cloudinaryImages.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.file(
-                            _selectedImages[index],
-                            fit: BoxFit.cover,
+                      if (index < _selectedImages.length) {
+                        // Render picked images
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
                           ),
-                        ),
-                      );
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.file(
+                              _selectedImages[index],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      } else {
+                        // Render images from Cloudinary
+                        final cloudinaryIndex = index - _selectedImages.length;
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              _cloudinaryImages[cloudinaryIndex],
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        );
+                      }
                     },
                   ),
                 SizedBox(height: 20),

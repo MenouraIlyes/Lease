@@ -286,7 +286,7 @@ class ApiService {
   }
 
   // Delete Reservation API
-  static Future<void> deleteReservation(String reservationId) async {
+  static Future<void> deleteReservation(String? reservationId) async {
     try {
       String apiUrl = '$mainUrl/reservations/$reservationId';
       var response = await http.delete(Uri.parse(apiUrl));

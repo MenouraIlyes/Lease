@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,6 +45,31 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
     }
   }
 
+  // Upload Images to cloudinary and get urls
+
+  Future<List<String>> uploadImages(List<String> imagePaths) async {
+    const cloudName = 'dhqgycty6';
+    const uploadPreset = 'k8rbqd6s';
+    final List<String> uploadedUrls = [];
+
+    final cloudinary = CloudinaryPublic(cloudName, uploadPreset);
+
+    for (final imagePath in imagePaths) {
+      final file = File(imagePath);
+      try {
+        final CloudinaryResponse uploadResponse = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile(file.path,
+              resourceType: CloudinaryResourceType.Image),
+        );
+        uploadedUrls.add(uploadResponse.secureUrl);
+      } catch (error) {
+        print('Error uploading image: $imagePath - $error');
+      }
+    }
+
+    return uploadedUrls;
+  }
+
   void _addVehicle() async {
     if (makeController.text.isEmpty ||
         modelController.text.isEmpty ||
@@ -82,10 +108,40 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
       return;
     }
 
+    // Show loading indicator when posting the vehicle to the database
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(width: 16),
+                Text("Please wait..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
     try {
       final userProvider = context.read<UserProfileProvider>();
       final agencyName = userProvider.userProfile?.username;
       final agencyNumber = userProvider.userProfile?.phoneNumber;
+
+      // Upload images and get the URLs
+      final List<String> imageUrls = await uploadImages(
+        _selectedImages.map((file) => file.path).toList(),
+      );
+
+      // Check if all images were uploaded successfully
+      if (imageUrls.length != _selectedImages.length) {
+        throw Exception('Failed to upload all images.');
+      }
 
       final Vehicle vehicle = Vehicle(
         make: makeController.text,
@@ -98,12 +154,15 @@ class _AddVehicleScreenState extends State<AddVehicleScreen> {
         gasType: gasTypeController.text,
         description: descriptionController.text,
         basePrice: basePriceController.text,
-        photos: _selectedImages.map((file) => file.path).toList(),
+        photos: imageUrls,
         agencyName: agencyName,
         agencyNumber: agencyNumber,
       );
 
       await ApiService.postVehicle(vehicle);
+
+      // Close the loading indicator
+      Navigator.of(context).pop();
 
       context.go('/home');
 

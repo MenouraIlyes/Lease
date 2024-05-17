@@ -203,8 +203,8 @@ class _PropertyCardState extends State<PropertyCard> {
                       currentPage = value;
                     });
                   },
-                  children: widget.property.photos.map((imagePath) {
-                    return Image.file(File(imagePath), fit: BoxFit.cover);
+                  children: widget.property.photos.map((imageUrl) {
+                    return Image.network(imageUrl, fit: BoxFit.cover);
                   }).toList(),
                 ),
               ),

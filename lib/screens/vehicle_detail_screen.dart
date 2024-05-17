@@ -177,8 +177,8 @@ class _VehicleDetailsScreenState extends State<VehicleDetailsScreen> {
             children: [
               // Display pics
 
-              Image.file(
-                File(selectedVehicle.photos.first),
+              Image.network(
+                selectedVehicle.photos.first,
                 width: 400,
                 height: 400,
                 fit: BoxFit.cover,
